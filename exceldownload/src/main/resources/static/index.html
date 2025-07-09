@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<p id="memory"></p>
+
+<a href="/download-excel" target="_blank">download..!</a>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let memoryElement = document.getElementById('memory');
+        setInterval( () => {
+            fetch('/memory')
+                .then(async (response) => {
+                    if (response.ok) {
+                        memoryElement.innerText = await response.text();
+                    }
+                })
+        }, 300)
+    })
+</script>
+
+</body>
+</html>
