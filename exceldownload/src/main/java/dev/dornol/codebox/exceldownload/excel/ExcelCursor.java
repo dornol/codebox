@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class ExcelCursor {
+public final class ExcelCursor {
 
     private int rowOfSheet;
-    private int columnCount;
+    private final int columnCount;
     private int currentTotal;
     private final Map<String, String> stringBox = new HashMap<>();
     private final Map<String, Long> longBox = new HashMap<>();
@@ -21,25 +21,25 @@ public class ExcelCursor {
     private final Map<String, LocalDateTime> datetimeBox = new HashMap<>();
     private final Map<String, LocalDate> dateBox = new HashMap<>();
 
-    protected ExcelCursor(int columnCount) {
+    ExcelCursor(int columnCount) {
         this.rowOfSheet = 0;
         this.currentTotal = 0;
         this.columnCount = columnCount;
     }
 
-    public void setRowOfSheet(int rowOfSheet) {
+    void setRowOfSheet(int rowOfSheet) {
         this.rowOfSheet = rowOfSheet;
     }
 
-    public void plusRow() {
+    void plusRow() {
         this.rowOfSheet++;
     }
 
-    public void initRow() {
+    void initRow() {
         this.rowOfSheet = 0;
     }
 
-    public void plusTotal() {
+    void plusTotal() {
         this.currentTotal++;
     }
 

@@ -1,7 +1,7 @@
 package dev.dornol.codebox.exceldownload.app.service;
 
 import dev.dornol.codebox.exceldownload.app.dto.BookDto;
-import dev.dornol.codebox.exceldownload.app.mapper.BookExcelMapper;
+import dev.dornol.codebox.exceldownload.app.excel.BookExcelMapper;
 import dev.dornol.codebox.exceldownload.app.repository.BookRepository;
 import dev.dornol.codebox.exceldownload.excel.ExcelHandler;
 import lombok.RequiredArgsConstructor;

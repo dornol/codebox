@@ -13,7 +13,7 @@ import static dev.dornol.codebox.exceldownload.excel.ExcelDataFormat.*;
 
 @Slf4j
 @Getter
-class ExcelColumn<T> {
+final class ExcelColumn<T> {
 
     private final String name;
     private ExcelDataType dataType = ExcelDataType.STRING;
@@ -24,12 +24,12 @@ class ExcelColumn<T> {
     private ExcelColumnSetter columnSetter = (cell, value) -> cell.setCellValue(String.valueOf(value));
     private int columnWidth = 256 * 256;
 
-    protected ExcelColumn(String name, ExcelRowFunction<T, Object> function) {
+    ExcelColumn(String name, ExcelRowFunction<T, Object> function) {
         this.name = name;
         this.function = function;
     }
 
-    public ExcelColumn<T> type(ExcelDataType dataType) {
+    void type(ExcelDataType dataType) {
         this.dataType = dataType;
         if (dataFormat == null) {
             if (dataType.equals(ExcelDataType.LONG) || dataType.equals(ExcelDataType.INTEGER)) {
@@ -56,18 +56,14 @@ class ExcelColumn<T> {
             case BIGDECIMAL_LONG -> (cell, value) -> cell.setCellValue(((BigDecimal) value).longValue());
             default -> (cell, value) -> cell.setCellValue(String.valueOf(value));
         };
-
-        return this;
     }
 
-    public ExcelColumn<T> format(String dataFormat) {
+    void format(String dataFormat) {
         this.dataFormat = dataFormat;
-        return this;
     }
 
-    public ExcelColumn<T> alignment(HorizontalAlignment alignment) {
+    void alignment(HorizontalAlignment alignment) {
         this.alignment = alignment;
-        return this;
     }
 
     Object applyFunction(T rowData, ExcelCursor cursor) {

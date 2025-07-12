@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -47,7 +48,13 @@ public class ExcelHandler<T> {
         return new ExcelColumnBuilder<>(this, column);
     }
 
-    public ExcelHandler<T> write(Stream<T> stream, ExcelConsumer<T> consumer) {
+    public ExcelColumnBuilder<T> column(String name, Function<T, Object> function) {
+        var column = new ExcelColumn<T>(name, ((rowData, cursor1) -> function.apply(rowData)));
+        this.columns.add(column);
+        return new ExcelColumnBuilder<>(this, column);
+    }
+
+    ExcelHandler<T> write(Stream<T> stream, ExcelConsumer<T> consumer) {
         if (this.columns.size() < 2) {
             throw new IllegalStateException("columns setting required");
         }
@@ -127,7 +134,7 @@ public class ExcelHandler<T> {
         try {
             column.getColumnSetter().set(cell, columnData);
         } catch (Exception e) {
-            log.debug("cast error: {}", e.getMessage());
+            log.warn("cast error: {}", e.getMessage());
             cell.setCellValue(String.valueOf(columnData));
         }
     }
@@ -204,12 +211,25 @@ public class ExcelHandler<T> {
             return parent.column(name, function);
         }
 
+        public ExcelColumnBuilder<T> column(String name, Function<T, Object> function) {
+            return parent.column(name, function);
+        }
+
+        public ExcelColumnBuilder<T> constColumn(String name, Object value) {
+            return parent.column(name, rowData -> value);
+        }
+
         public ExcelHandler<T> write(Stream<T> stream, ExcelConsumer<T> consumer) {
             return parent.write(stream, consumer);
         }
 
         public ExcelHandler<T> write(Stream<T> stream) {
             return parent.write(stream);
+        }
+
+        public ExcelColumnBuilder<T> maxRowsOfSheet(int maxRowsOfSheet) {
+            parent.maxRowsOfSheet = maxRowsOfSheet;
+            return this;
         }
 
     }
