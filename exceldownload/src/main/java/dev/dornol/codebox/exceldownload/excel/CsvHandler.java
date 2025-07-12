@@ -1,6 +1,7 @@
 package dev.dornol.codebox.exceldownload.excel;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -12,13 +13,13 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-@Slf4j
 public class CsvHandler<T> {
-    private final List<ExcelColumn<T>> columns = new ArrayList<>();
+    private static final Logger log = LoggerFactory.getLogger(CsvHandler.class);
+    private final List<CsvColumn<T>> columns = new ArrayList<>();
     private Path tempFile;
 
-    public CsvHandler<T> column(String name, ExcelRowFunction<T, Object> function) {
-        var column = new ExcelColumn<>(name, function);
+    public CsvHandler<T> column(String name, CsvRowFunction<T, Object> function) {
+        var column = new CsvColumn<T>(name, function);
         this.columns.add(column);
         return this;
     }
@@ -54,12 +55,12 @@ public class CsvHandler<T> {
                 stream;
                 var writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))
         ) {
-            ExcelCursor cursor = new ExcelCursor(columns.size());
+            CsvCursor cursor = new CsvCursor(columns.size());
             cursor.initRow();
 
             // 헤더 출력
             writer.println(columns.stream()
-                    .map(ExcelColumn::getName)
+                    .map(CsvColumn::getName)
                     .reduce((a, b) -> a + "," + b).orElse(""));
             cursor.plusRow();
 

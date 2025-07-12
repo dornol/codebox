@@ -2,13 +2,13 @@ package dev.dornol.codebox.exceldownload.app.excel;
 
 import dev.dornol.codebox.exceldownload.app.dto.BookDto;
 import dev.dornol.codebox.exceldownload.excel.CsvHandler;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 import java.util.stream.Stream;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BookCsvMapper {
+public final class BookCsvMapper {
+    private BookCsvMapper() {
+        /* empty */
+    }
 
     public static CsvHandler<BookDto> getHandler(Stream<BookDto> stream) {
         var handler = new CsvHandler<BookDto>();

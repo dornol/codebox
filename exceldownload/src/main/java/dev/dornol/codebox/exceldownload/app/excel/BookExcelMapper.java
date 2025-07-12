@@ -3,13 +3,14 @@ package dev.dornol.codebox.exceldownload.app.excel;
 import dev.dornol.codebox.exceldownload.app.dto.BookDto;
 import dev.dornol.codebox.exceldownload.excel.ExcelDataType;
 import dev.dornol.codebox.exceldownload.excel.ExcelHandler;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 import java.util.stream.Stream;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookExcelMapper {
+
+    private BookExcelMapper() {
+        /* empty */
+    }
 
     public static ExcelHandler<BookDto> getHandler(Stream<BookDto> stream) {
         var handler = new ExcelHandler<BookDto>();

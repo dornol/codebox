@@ -1,6 +1,7 @@
 package dev.dornol.codebox.exceldownload.app.init;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,9 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @Component
 public class BookDataInitializer implements CommandLineRunner {
+    private static final Logger log = LoggerFactory.getLogger(BookDataInitializer.class);
     private final JdbcTemplate jdbcTemplate;
     private final Long dummyCount;
 

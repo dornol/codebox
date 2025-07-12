@@ -1,10 +1,5 @@
 package dev.dornol.codebox.exceldownload.excel;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@Getter
-@RequiredArgsConstructor
 public enum ExcelDataFormat {
 
     NUMBER("#,##0"),
@@ -18,4 +13,12 @@ public enum ExcelDataFormat {
      * 엑셀의 포맷
      */
     private final String format;
+
+    ExcelDataFormat(String format) {
+        this.format = format;
+    }
+
+    public String getFormat() {
+        return format;
+    }
 }

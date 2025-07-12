@@ -1,9 +1,9 @@
 package dev.dornol.codebox.exceldownload.excel;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,18 +11,16 @@ import java.time.LocalDateTime;
 
 import static dev.dornol.codebox.exceldownload.excel.ExcelDataFormat.*;
 
-@Slf4j
-@Getter
 final class ExcelColumn<T> {
-
-    private final String name;
-    private ExcelDataType dataType = ExcelDataType.STRING;
-    private String dataFormat;
-    private HorizontalAlignment alignment = HorizontalAlignment.CENTER;
-    private final ExcelRowFunction<T, Object> function;
-    private CellStyle style;
-    private ExcelColumnSetter columnSetter = (cell, value) -> cell.setCellValue(String.valueOf(value));
-    private int columnWidth = 256 * 256;
+    private static final Logger log = LoggerFactory.getLogger(ExcelColumn.class);
+    final String name;
+    ExcelDataType dataType = ExcelDataType.STRING;
+    String dataFormat;
+    HorizontalAlignment alignment = HorizontalAlignment.CENTER;
+    final ExcelRowFunction<T, Object> function;
+    CellStyle style;
+    ExcelColumnSetter columnSetter = (cell, value) -> cell.setCellValue(String.valueOf(value));
+    int columnWidth = 256 * 256;
 
     ExcelColumn(String name, ExcelRowFunction<T, Object> function) {
         this.name = name;
@@ -32,9 +30,9 @@ final class ExcelColumn<T> {
     void type(ExcelDataType dataType) {
         this.dataType = dataType;
         if (dataFormat == null) {
-            if (dataType.equals(ExcelDataType.LONG) || dataType.equals(ExcelDataType.INTEGER)) {
+            if (dataType.equals(ExcelDataType.LONG) || dataType.equals(dev.dornol.codebox.exceldownload.excel.ExcelDataType.INTEGER)) {
                 this.format(NUMBER.getFormat());
-            } else if (dataType.equals(ExcelDataType.DOUBLE_PERCENT) || dataType.equals(ExcelDataType.FLOAT_PERCENT)) {
+            } else if (dataType.equals(ExcelDataType.DOUBLE_PERCENT) || dataType.equals(dev.dornol.codebox.exceldownload.excel.ExcelDataType.FLOAT_PERCENT)) {
                 this.format(PERCENT.getFormat());
             } else if (dataType.equals(ExcelDataType.DATE)) {
                 this.format(DATE.getFormat());
@@ -81,5 +79,37 @@ final class ExcelColumn<T> {
 
     void setColumnWidth(int columnWidth) {
         this.columnWidth = columnWidth;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ExcelDataType getDataType() {
+        return dataType;
+    }
+
+    public String getDataFormat() {
+        return dataFormat;
+    }
+
+    public HorizontalAlignment getAlignment() {
+        return alignment;
+    }
+
+    public ExcelRowFunction<T, Object> getFunction() {
+        return function;
+    }
+
+    public CellStyle getStyle() {
+        return style;
+    }
+
+    public ExcelColumnSetter getColumnSetter() {
+        return columnSetter;
+    }
+
+    public int getColumnWidth() {
+        return columnWidth;
     }
 }

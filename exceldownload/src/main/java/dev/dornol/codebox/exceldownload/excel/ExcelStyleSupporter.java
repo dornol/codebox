@@ -1,13 +1,13 @@
 package dev.dornol.codebox.exceldownload.excel;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class ExcelStyleSupporter {
+    private ExcelStyleSupporter() {
+        /* empty */
+    }
 
     static CellStyle headerStyle(SXSSFWorkbook wb) {
         CellStyle headerStyle = wb.createCellStyle();

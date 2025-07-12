@@ -1,13 +1,10 @@
 package dev.dornol.codebox.exceldownload.excel;
 
-import lombok.Getter;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
 public final class ExcelCursor {
 
     private int rowOfSheet;
@@ -27,10 +24,6 @@ public final class ExcelCursor {
         this.columnCount = columnCount;
     }
 
-    void setRowOfSheet(int rowOfSheet) {
-        this.rowOfSheet = rowOfSheet;
-    }
-
     void plusRow() {
         this.rowOfSheet++;
     }
@@ -43,6 +36,45 @@ public final class ExcelCursor {
         this.currentTotal++;
     }
 
+    public int getRowOfSheet() {
+        return rowOfSheet;
+    }
+
+    public int getColumnCount() {
+        return columnCount;
+    }
+
+    public int getCurrentTotal() {
+        return currentTotal;
+    }
+
+    public Map<String, String> getStringBox() {
+        return stringBox;
+    }
+
+    public Map<String, Long> getLongBox() {
+        return longBox;
+    }
+
+    public Map<String, Integer> getIntegerBox() {
+        return integerBox;
+    }
+
+    public Map<String, Double> getDoubleBox() {
+        return doubleBox;
+    }
+
+    public Map<String, Float> getFloatBox() {
+        return floatBox;
+    }
+
+    public Map<String, LocalDateTime> getDatetimeBox() {
+        return datetimeBox;
+    }
+
+    public Map<String, LocalDate> getDateBox() {
+        return dateBox;
+    }
 
     @Override
     public String toString() {

@@ -1,7 +1,5 @@
 package dev.dornol.codebox.exceldownload.excel;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.crypt.Encryptor;
@@ -12,6 +10,8 @@ import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,14 +28,12 @@ import java.util.stream.Stream;
  * 
  * @param <T>
  */
-@Slf4j
 public class ExcelHandler<T> {
+    private static final Logger log = LoggerFactory.getLogger(ExcelHandler.class);
     private final SXSSFWorkbook wb;
     private SXSSFSheet sheet;
     private final List<ExcelColumn<T>> columns = new ArrayList<>();
     private ExcelCursor cursor;
-
-    @Setter
     private int maxRowsOfSheet = 1_000_000;
 
     public ExcelHandler() {
