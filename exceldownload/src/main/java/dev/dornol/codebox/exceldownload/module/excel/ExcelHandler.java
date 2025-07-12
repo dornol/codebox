@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.excel;
+package dev.dornol.codebox.exceldownload.module.excel;
 
 import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
@@ -191,17 +191,17 @@ public class ExcelHandler<T> {
          * 엑셀의 데이터 포맷
          */
         public ExcelColumnBuilder<T> format(String dataFormat) {
-            column.format(dataFormat);
+            column.setFormat(dataFormat);
             return this;
         }
 
         public ExcelColumnBuilder<T> format(ExcelDataFormat dataFormat) {
-            column.format(dataFormat.getFormat());
+            column.setFormat(dataFormat.getFormat());
             return this;
         }
 
         public ExcelColumnBuilder<T> alignment(HorizontalAlignment alignment) {
-            column.alignment(alignment);
+            column.setAlignment(alignment);
             return this;
         }
 

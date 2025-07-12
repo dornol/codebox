@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.excel;
+package dev.dornol.codebox.exceldownload.module.excel;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

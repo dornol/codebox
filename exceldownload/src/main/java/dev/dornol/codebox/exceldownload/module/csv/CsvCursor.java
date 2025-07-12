@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.excel;
+package dev.dornol.codebox.exceldownload.module.csv;
 
 public final class CsvCursor {
     private int rowOfSheet;

@@ -4,8 +4,8 @@ import dev.dornol.codebox.exceldownload.app.dto.BookDto;
 import dev.dornol.codebox.exceldownload.app.excel.BookCsvMapper;
 import dev.dornol.codebox.exceldownload.app.excel.BookExcelMapper;
 import dev.dornol.codebox.exceldownload.app.repository.BookRepository;
-import dev.dornol.codebox.exceldownload.excel.CsvHandler;
-import dev.dornol.codebox.exceldownload.excel.ExcelHandler;
+import dev.dornol.codebox.exceldownload.module.csv.CsvHandler;
+import dev.dornol.codebox.exceldownload.module.excel.ExcelHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

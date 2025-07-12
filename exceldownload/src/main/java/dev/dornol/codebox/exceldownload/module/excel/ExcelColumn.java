@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.excel;
+package dev.dornol.codebox.exceldownload.module.excel;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static dev.dornol.codebox.exceldownload.excel.ExcelDataFormat.*;
+import static dev.dornol.codebox.exceldownload.module.excel.ExcelDataFormat.*;
 
 final class ExcelColumn<T> {
     private static final Logger log = LoggerFactory.getLogger(ExcelColumn.class);
@@ -30,16 +30,16 @@ final class ExcelColumn<T> {
     void type(ExcelDataType dataType) {
         this.dataType = dataType;
         if (dataFormat == null) {
-            if (dataType.equals(ExcelDataType.LONG) || dataType.equals(dev.dornol.codebox.exceldownload.excel.ExcelDataType.INTEGER)) {
-                this.format(NUMBER.getFormat());
-            } else if (dataType.equals(ExcelDataType.DOUBLE_PERCENT) || dataType.equals(dev.dornol.codebox.exceldownload.excel.ExcelDataType.FLOAT_PERCENT)) {
-                this.format(PERCENT.getFormat());
+            if (dataType.equals(ExcelDataType.LONG) || dataType.equals(ExcelDataType.INTEGER)) {
+                this.setFormat(NUMBER.getFormat());
+            } else if (dataType.equals(ExcelDataType.DOUBLE_PERCENT) || dataType.equals(ExcelDataType.FLOAT_PERCENT)) {
+                this.setFormat(PERCENT.getFormat());
             } else if (dataType.equals(ExcelDataType.DATE)) {
-                this.format(DATE.getFormat());
+                this.setFormat(DATE.getFormat());
             } else if (dataType.equals(ExcelDataType.DATETIME)) {
-                this.format(DATETIME.getFormat());
+                this.setFormat(DATETIME.getFormat());
             } else if (dataType.equals(ExcelDataType.TIME)) {
-                this.format(TIME.getFormat());
+                this.setFormat(TIME.getFormat());
             }
         }
 
@@ -56,11 +56,11 @@ final class ExcelColumn<T> {
         };
     }
 
-    void format(String dataFormat) {
+    void setFormat(String dataFormat) {
         this.dataFormat = dataFormat;
     }
 
-    void alignment(HorizontalAlignment alignment) {
+    void setAlignment(HorizontalAlignment alignment) {
         this.alignment = alignment;
     }
 
@@ -95,10 +95,6 @@ final class ExcelColumn<T> {
 
     public HorizontalAlignment getAlignment() {
         return alignment;
-    }
-
-    public ExcelRowFunction<T, Object> getFunction() {
-        return function;
     }
 
     public CellStyle getStyle() {

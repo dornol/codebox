@@ -1,8 +1,8 @@
 package dev.dornol.codebox.exceldownload.app.excel;
 
 import dev.dornol.codebox.exceldownload.app.dto.BookDto;
-import dev.dornol.codebox.exceldownload.excel.ExcelDataType;
-import dev.dornol.codebox.exceldownload.excel.ExcelHandler;
+import dev.dornol.codebox.exceldownload.module.excel.ExcelDataType;
+import dev.dornol.codebox.exceldownload.module.excel.ExcelHandler;
 
 import java.util.stream.Stream;
 

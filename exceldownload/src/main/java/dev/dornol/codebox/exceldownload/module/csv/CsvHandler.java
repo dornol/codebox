@@ -1,7 +1,6 @@
-package dev.dornol.codebox.exceldownload.excel;
+package dev.dornol.codebox.exceldownload.module.csv;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import dev.dornol.codebox.exceldownload.module.excel.CsvRowFunction;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +13,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class CsvHandler<T> {
-    private static final Logger log = LoggerFactory.getLogger(CsvHandler.class);
     private final List<CsvColumn<T>> columns = new ArrayList<>();
     private Path tempFile;
 
@@ -36,14 +34,12 @@ public class CsvHandler<T> {
         try {
             tempFile = Files.createTempFile(UUID.randomUUID().toString(), ".csv");
         } catch (IOException e) {
-            log.error("create temp file failed: {}", e.getMessage());
             throw new IllegalStateException(e);
         }
 
         try (OutputStream os = Files.newOutputStream(tempFile)) {
             writeTempFile(stream, os);
         } catch (IOException e) {
-            log.error("write csv failed: {}", e.getMessage());
             throw new IllegalStateException(e);
         }
 
@@ -51,8 +47,9 @@ public class CsvHandler<T> {
     }
 
     void writeTempFile(Stream<T> stream, OutputStream outputStream) {
+        Stream<T> sequential = stream.sequential();
         try (
-                stream;
+                sequential;
                 var writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))
         ) {
             CsvCursor cursor = new CsvCursor(columns.size());
@@ -65,7 +62,7 @@ public class CsvHandler<T> {
             cursor.plusRow();
 
             // 데이터 출력
-            stream.forEach(row -> {
+            sequential.forEach(row -> {
                 cursor.plusTotal();
                 cursor.plusRow();
                 String line = columns.stream()
@@ -86,7 +83,6 @@ public class CsvHandler<T> {
                 Files.deleteIfExists(tempFile);
             }
         } catch (IOException e) {
-            log.error("consumeOutputStream failed: {}", e.getMessage());
             throw new IllegalStateException(e);
         }
     }
