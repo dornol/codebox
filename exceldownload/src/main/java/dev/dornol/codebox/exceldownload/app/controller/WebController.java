@@ -1,6 +1,7 @@
 package dev.dornol.codebox.exceldownload.app.controller;
 
 import dev.dornol.codebox.exceldownload.app.service.BookService;
+import dev.dornol.codebox.exceldownload.app.util.CsvDownloadUtil;
 import dev.dornol.codebox.exceldownload.app.util.ExcelDownloadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,13 @@ public class WebController {
         var handler = bookService.getExcelHandler();
         return ExcelDownloadUtil.builder(filename)
                 .body(outputStream -> handler.consumeOutputStreamWithPassword(outputStream, password));
+    }
+
+    @GetMapping("/download-csv")
+    public ResponseEntity<StreamingResponseBody> downloadCsv() {
+        String filename = "book_list";
+        var handler = bookService.getCsvHandler();
+        return CsvDownloadUtil.builder(filename).body(handler::consumeOutputStream);
     }
 
     @ResponseBody

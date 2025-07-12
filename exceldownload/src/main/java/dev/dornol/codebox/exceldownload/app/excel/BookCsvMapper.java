@@ -1,21 +1,20 @@
 package dev.dornol.codebox.exceldownload.app.excel;
 
 import dev.dornol.codebox.exceldownload.app.dto.BookDto;
-import dev.dornol.codebox.exceldownload.excel.ExcelDataType;
-import dev.dornol.codebox.exceldownload.excel.ExcelHandler;
+import dev.dornol.codebox.exceldownload.excel.CsvHandler;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BookExcelMapper {
+public class BookCsvMapper {
 
-    public static ExcelHandler<BookDto> getHandler(Stream<BookDto> stream) {
-        var handler = new ExcelHandler<BookDto>();
+    public static CsvHandler<BookDto> getHandler(Stream<BookDto> stream) {
+        var handler = new CsvHandler<BookDto>();
         return handler
-                .column("no", (rowData, cursor) -> cursor.getCurrentTotal()).type(ExcelDataType.INTEGER)
-                .column("id", BookDto::id).type(ExcelDataType.LONG)
+                .column("no", (rowData, cursor) -> cursor.getCurrentTotal())
+                .column("id", BookDto::id)
                 .column("title", BookDto::title)
                 .column("subtitle", BookDto::subtitle)
                 .column("author", BookDto::author)
