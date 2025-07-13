@@ -2,12 +2,7 @@ package dev.dornol.codebox.exceldownload.app.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Book {
 
@@ -26,6 +21,9 @@ public class Book {
 
     private String description;
 
+    protected Book() {
+    }
+
     public Book(Long id, String title, String subtitle, String author, String publisher, String isbn, String description) {
         this.id = id;
         this.title = title;
@@ -34,5 +32,33 @@ public class Book {
         this.publisher = publisher;
         this.isbn = isbn;
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

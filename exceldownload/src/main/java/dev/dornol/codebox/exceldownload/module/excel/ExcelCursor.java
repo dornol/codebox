@@ -1,17 +1,14 @@
-package dev.dornol.codebox.exceldownload.excel;
-
-import lombok.Getter;
+package dev.dornol.codebox.exceldownload.module.excel;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-public class ExcelCursor {
+public final class ExcelCursor {
 
     private int rowOfSheet;
-    private int columnCount;
+    private final int columnCount;
     private int currentTotal;
     private final Map<String, String> stringBox = new HashMap<>();
     private final Map<String, Long> longBox = new HashMap<>();
@@ -21,28 +18,63 @@ public class ExcelCursor {
     private final Map<String, LocalDateTime> datetimeBox = new HashMap<>();
     private final Map<String, LocalDate> dateBox = new HashMap<>();
 
-    protected ExcelCursor(int columnCount) {
+    ExcelCursor(int columnCount) {
         this.rowOfSheet = 0;
         this.currentTotal = 0;
         this.columnCount = columnCount;
     }
 
-    public void setRowOfSheet(int rowOfSheet) {
-        this.rowOfSheet = rowOfSheet;
-    }
-
-    public void plusRow() {
+    void plusRow() {
         this.rowOfSheet++;
     }
 
-    public void initRow() {
+    void initRow() {
         this.rowOfSheet = 0;
     }
 
-    public void plusTotal() {
+    void plusTotal() {
         this.currentTotal++;
     }
 
+    public int getRowOfSheet() {
+        return rowOfSheet;
+    }
+
+    public int getColumnCount() {
+        return columnCount;
+    }
+
+    public int getCurrentTotal() {
+        return currentTotal;
+    }
+
+    public Map<String, String> getStringBox() {
+        return stringBox;
+    }
+
+    public Map<String, Long> getLongBox() {
+        return longBox;
+    }
+
+    public Map<String, Integer> getIntegerBox() {
+        return integerBox;
+    }
+
+    public Map<String, Double> getDoubleBox() {
+        return doubleBox;
+    }
+
+    public Map<String, Float> getFloatBox() {
+        return floatBox;
+    }
+
+    public Map<String, LocalDateTime> getDatetimeBox() {
+        return datetimeBox;
+    }
+
+    public Map<String, LocalDate> getDateBox() {
+        return dateBox;
+    }
 
     @Override
     public String toString() {

@@ -2,13 +2,17 @@ package dev.dornol.codebox.exceldownload.app.repository;
 
 import dev.dornol.codebox.exceldownload.app.dto.BookDto;
 import dev.dornol.codebox.exceldownload.app.model.Book;
+import jakarta.persistence.QueryHint;
+import org.hibernate.jpa.HibernateHints;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 
 import java.util.stream.Stream;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
+    @QueryHints(value = @QueryHint(name = HibernateHints.HINT_FETCH_SIZE, value = "1000"))
     @Query("""
             select new dev.dornol.codebox.exceldownload.app.dto.BookDto(b.id, b.title, b.subtitle, b.author, b.publisher, b.isbn, b.description)
             from Book b

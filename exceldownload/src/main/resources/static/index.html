@@ -6,20 +6,45 @@
 </head>
 <body>
 
-<p id="memory"></p>
+<p id="memory">Loading memory usage...</p>
 
-<a href="/download-excel" target="_blank">download..!</a>
+<div>
+    <form action="/download-excel-with-password" target="_blank">
+        <label for="password">
+            <span>password</span>
+            <input type="text" name="password" id="password" placeholder="password" value="1234">
+        </label>
+        <button type="submit">Download Excel (with password)</button>
+    </form>
+</div>
 
+<div>
+    <a href="/download-excel" target="_blank">
+        <button>Download Excel</button>
+    </a>
+</div>
+
+<div>
+    <a href="/download-csv" target="_blank">
+        <button>Download CSV</button>
+    </a>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let memoryElement = document.getElementById('memory');
-        setInterval( () => {
+        setInterval(() => {
             fetch('/memory')
                 .then(async (response) => {
                     if (response.ok) {
                         memoryElement.innerText = await response.text();
+                    } else {
+                        memoryElement.innerText = 'Failed to retrieve memory usage.';
                     }
+                })
+                .catch(err => {
+                    memoryElement.innerText = 'Error retrieving memory usage.';
+                    console.error(err);
                 })
         }, 300)
     })

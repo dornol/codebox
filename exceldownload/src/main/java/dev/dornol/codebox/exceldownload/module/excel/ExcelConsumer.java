@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.excel;
+package dev.dornol.codebox.exceldownload.module.excel;
 
 @FunctionalInterface
 public interface ExcelConsumer<T> {
