@@ -6,10 +6,22 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 
 class ExcelStyleSupporter {
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
     private ExcelStyleSupporter() {
         /* empty */
     }
 
+    /**
+     * Creates a header cell style with centered alignment, solid background color, thin borders, and a bold font for use in an SXSSFWorkbook.
+     *
+     * The font color is set to white if the background color is dark, otherwise black.
+     *
+     * @param wb the SXSSFWorkbook in which to create the style
+     * @param headerColor the background color for the header cell
+     * @return a CellStyle configured for header cells
+     */
     static CellStyle headerStyle(SXSSFWorkbook wb, XSSFColor headerColor) {
         CellStyle headerStyle = wb.createCellStyle();
         Font headerFont = wb.createFont();
@@ -34,6 +46,14 @@ class ExcelStyleSupporter {
         return headerStyle;
     }
 
+    /**
+     * Determines whether the given XSSFColor is considered dark based on its luminance.
+     *
+     * Uses the W3C standard luminance formula to calculate brightness. Returns false if the color's RGB data is unavailable or invalid.
+     *
+     * @param color the XSSFColor to evaluate
+     * @return true if the color is dark; false otherwise
+     */
     private static boolean isDarkColor(XSSFColor color) {
         byte[] rgb = color.getRGB();
         if (rgb == null || rgb.length != 3) return false;
@@ -47,6 +67,13 @@ class ExcelStyleSupporter {
         return luminance < 128; // 밝기 기준: 0~255 중 128 미만은 어둡다고 판단
     }
 
+    /**
+     * Creates a general-purpose cell style with specified horizontal alignment, optional data format, thin borders, and text wrapping for an SXSSFWorkbook.
+     *
+     * @param alignment the horizontal alignment to apply to the cell style
+     * @param format the data format string to apply, or null for no specific format
+     * @return a configured CellStyle instance
+     */
     static CellStyle cellStyle(SXSSFWorkbook wb, HorizontalAlignment alignment, String format) {
         CellStyle nowStyle = wb.createCellStyle();
 

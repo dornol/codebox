@@ -35,31 +35,75 @@ public class ExcelHandler<T> {
     private ExcelCursor cursor;
     private int maxRowsOfSheet = 1_000_000;
 
+    /**
+     * Constructs an ExcelHandler with a custom header color specified by RGB values.
+     *
+     * @param r the red component of the header color (0-255)
+     * @param g the green component of the header color (0-255)
+     * @param b the blue component of the header color (0-255)
+     */
     public ExcelHandler(int r, int g, int b) {
         this.wb = new SXSSFWorkbook(10000);
         this.headerColor = new XSSFColor(new byte[]{(byte) r, (byte) g, (byte) b});
     }
 
+    /**
+     * Constructs an ExcelHandler with a default white header color.
+     */
     public ExcelHandler() {
         this(255, 255, 255);
     }
 
+    /**
+     * Adds a column definition to the list of columns for the Excel sheet.
+     *
+     * @param column the column configuration to add
+     */
     void addColumn(ExcelColumn<T> column) {
         this.columns.add(column);
     }
 
+    /**
+     * Creates a column builder for defining a column with a custom function that receives both the row data and column index.
+     *
+     * @param name the name of the column to be displayed in the Excel header
+     * @param function a function that maps the row data and column index to the cell value
+     * @return a builder for further configuring the column
+     */
     public ExcelColumn.ExcelColumnBuilder<T> column(String name, ExcelRowFunction<T, Object> function) {
         return new ExcelColumn.ExcelColumnBuilder<>(this, name, function);
     }
 
+    /**
+     * Creates a column builder for adding a column with the specified name, using a function to extract cell values from each row.
+     *
+     * @param name the column header name
+     * @param function a function that maps a row object to the cell value for this column
+     * @return a builder for configuring and adding the column
+     */
     public ExcelColumn.ExcelColumnBuilder<T> column(String name, Function<T, Object> function) {
         return new ExcelColumn.ExcelColumnBuilder<>(this, name, (r, c) -> function.apply(r));
     }
 
+    /**
+     * Creates a column builder for a column with a constant value for all rows.
+     *
+     * @param name the name of the column
+     * @param value the constant value to be used for every row in this column
+     * @return a builder for configuring the constant value column
+     */
     public ExcelColumn.ExcelColumnBuilder<T> constColumn(String name, Object value) {
         return new ExcelColumn.ExcelColumnBuilder<>(this, name, (r, c) -> value);
     }
 
+    /**
+     * Writes data from the provided stream to the Excel workbook, applying each row to the sheet and invoking the specified consumer for additional processing.
+     *
+     * @param stream   the stream of data rows to write
+     * @param consumer a callback invoked for each row with the row data and current cursor position
+     * @return this ExcelHandler instance for method chaining
+     * @throws IllegalStateException if fewer than two columns are defined before writing
+     */
     ExcelHandler<T> write(Stream<T> stream, ExcelConsumer<T> consumer) {
         if (this.columns.size() < 2) {
             throw new IllegalStateException("columns setting required");
@@ -79,12 +123,21 @@ public class ExcelHandler<T> {
         return this;
     }
 
+    /**
+     * Writes data from the provided stream to the Excel workbook without applying any additional row-level processing.
+     *
+     * @param stream the stream of data rows to write to the Excel sheet
+     * @return this ExcelHandler instance for method chaining
+     */
     public ExcelHandler<T> write(Stream<T> stream) {
         this.write(stream, (rowData, consumer) -> {
         });
         return this;
     }
 
+    /**
+     * Creates and writes the header row in the current Excel sheet, applying the configured header style and column names.
+     */
     private void setColumnHeaders() {
         CellStyle headerStyle = ExcelStyleSupporter.headerStyle(wb, this.headerColor);
         SXSSFRow headRow = sheet.createRow(cursor.getRowOfSheet());
@@ -97,6 +150,11 @@ public class ExcelHandler<T> {
         }
     }
 
+    /**
+     * Writes a single row of data to the current Excel sheet, applying column functions, styles, and adjusting column widths as needed.
+     *
+     * @param rowData the data object representing the row to be written
+     */
     void handleRowData(T rowData) {
         cursor.plusTotal();
         if (isOverMaxRows()) {
@@ -122,6 +180,9 @@ public class ExcelHandler<T> {
         }
     }
 
+    /**
+     * Creates a new sheet in the workbook and resets the row cursor to the initial position.
+     */
     private void turnOverSheet() {
         this.sheet = wb.createSheet();
         this.cursor.initRow();
@@ -140,6 +201,16 @@ public class ExcelHandler<T> {
         }
     }
 
+    /**
+     * Writes the Excel workbook to the provided output stream with password protection.
+     *
+     * The output file will be encrypted using the specified password. Closes the workbook after writing.
+     *
+     * @param outputStream the output stream to write the encrypted Excel file to
+     * @param password the password to encrypt the Excel file with
+     * @throws IOException if an I/O error occurs during writing
+     * @throws IllegalStateException if a security exception occurs during encryption
+     */
     public void consumeOutputStreamWithPassword(OutputStream outputStream, String password) throws IOException {
         try (POIFSFileSystem fs = new POIFSFileSystem();) {
             EncryptionInfo info = new EncryptionInfo(EncryptionMode.agile);
@@ -158,10 +229,20 @@ public class ExcelHandler<T> {
         }
     }
 
+    /**
+     * Returns the underlying streaming workbook instance used for Excel file generation.
+     *
+     * @return the SXSSFWorkbook representing the current Excel workbook
+     */
     SXSSFWorkbook getWb() {
         return wb;
     }
 
+    /**
+     * Sets the maximum number of rows allowed per sheet before a new sheet is created.
+     *
+     * @param maxRowsOfSheet the maximum number of rows per sheet
+     */
     void setMaxRowsOfSheet(int maxRowsOfSheet) {
         this.maxRowsOfSheet = maxRowsOfSheet;
     }

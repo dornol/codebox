@@ -6,8 +6,18 @@ import dev.dornol.codebox.exceldownload.module.excel.ExcelHandler;
 
 public interface BookService {
 
-    ExcelHandler<BookDto> getExcelHandler();
+    /**
+ * Provides an Excel handler for processing BookDto objects.
+ *
+ * @return an ExcelHandler instance for BookDto entities
+ */
+ExcelHandler<BookDto> getExcelHandler();
 
-    CsvHandler<BookDto> getCsvHandler();
+    /**
+ * Returns a CSV handler for processing {@code BookDto} objects.
+ *
+ * @return a {@code CsvHandler} instance for {@code BookDto}
+ */
+CsvHandler<BookDto> getCsvHandler();
 
 }

@@ -5,6 +5,12 @@ import org.apache.poi.xssf.streaming.SXSSFCell;
 @FunctionalInterface
 interface ExcelColumnSetter {
 
-    void set(SXSSFCell cell, Object value);
+    /**
+ * Sets the value of the specified Excel cell.
+ *
+ * @param cell  the SXSSFCell to update
+ * @param value the value to assign to the cell
+ */
+void set(SXSSFCell cell, Object value);
 
 }

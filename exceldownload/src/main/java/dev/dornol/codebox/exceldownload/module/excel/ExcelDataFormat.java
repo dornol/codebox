@@ -14,10 +14,20 @@ public enum ExcelDataFormat {
      */
     private final String format;
 
+    /**
+     * Constructs an ExcelDataFormat enum constant with the specified Excel format string.
+     *
+     * @param format the Excel format string associated with the enum constant
+     */
     ExcelDataFormat(String format) {
         this.format = format;
     }
 
+    /**
+     * Returns the Excel format string associated with this data format.
+     *
+     * @return the Excel format string
+     */
     public String getFormat() {
         return format;
     }

@@ -11,19 +11,43 @@ public enum DownloadFileType {
     private final String contentType;
     private final String extension;
 
+    /**
+     * Constructs a DownloadFileType enum constant with the specified MIME content type and file extension.
+     *
+     * @param contentType the MIME type associated with the file type
+     * @param extension the file extension for the file type
+     */
     DownloadFileType(String contentType, String extension) {
         this.contentType = contentType;
         this.extension = extension;
     }
 
+    /**
+     * Returns the MIME content type string associated with this file type.
+     *
+     * @return the MIME content type (e.g., "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" or "text/csv; charset=UTF-8")
+     */
     public String getContentType() {
         return contentType;
     }
 
+    /**
+     * Returns the file extension associated with this file type.
+     *
+     * @return the file extension string (e.g., "xlsx" or "csv")
+     */
     public String getExtension() {
         return extension;
     }
 
+    /**
+     * Generates a Content-Disposition header value for HTTP file downloads using the provided filename and the file type's extension.
+     *
+     * The header includes both an ASCII-only fallback filename and a UTF-8 percent-encoded filename according to RFC 5987 for broad client compatibility.
+     *
+     * @param filename The base filename (without extension) to use for the downloaded file.
+     * @return A Content-Disposition header value suitable for HTTP responses to prompt file download.
+     */
     public String getContentDisposition(String filename) {
         String csvFilename = filename + "." + extension;
 
