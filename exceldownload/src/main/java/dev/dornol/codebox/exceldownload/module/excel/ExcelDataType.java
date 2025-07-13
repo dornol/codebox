@@ -16,8 +16,8 @@ public enum ExcelDataType {
     DATE,
     TIME,
 
-    BIGDECIMAL_DOUBLE,
-    BIGDECIMAL_LONG
+    BIG_DECIMAL_TO_DOUBLE,
+    BIG_DECIMAL_TO_LONG
     ;
 
 }

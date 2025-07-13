@@ -1,6 +1,5 @@
 package dev.dornol.codebox.exceldownload.module.csv;
 
-import dev.dornol.codebox.exceldownload.module.excel.CsvRowFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +24,7 @@ public final class CsvColumn<T> {
         try {
             return function.apply(rowData, cursor);
         } catch (Exception e) {
-            log.error("Failed to apply function for column '{}' with rowData: {}, cursor: {}", name, rowData, cursor, e);
+            log.error("Failed to apply function for column '{}' at row {}", name, cursor.getRowOfSheet(), e);
             return null;
         }
     }

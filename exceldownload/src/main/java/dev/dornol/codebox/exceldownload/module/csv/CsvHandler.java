@@ -1,6 +1,7 @@
 package dev.dornol.codebox.exceldownload.module.csv;
 
-import dev.dornol.codebox.exceldownload.module.excel.CsvRowFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +13,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class CsvHandler<T> {
+public class CsvHandler<T> implements AutoCloseable {
+    private static final Logger log = LoggerFactory.getLogger(CsvHandler.class);
     private final List<CsvColumn<T>> columns = new ArrayList<>();
     private Path tempFile;
 
@@ -80,7 +82,7 @@ public class CsvHandler<T> {
             try (InputStream is = Files.newInputStream(tempFile)) {
                 is.transferTo(outputStream);
             } finally {
-                Files.deleteIfExists(tempFile);
+                this.close();
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -90,9 +92,20 @@ public class CsvHandler<T> {
     private static String escapeCsv(Object input) {
         if (input == null) return "";
         String value = input.toString();
-        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+        if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
             return "\"" + value.replace("\"", "\"\"") + "\"";
         }
         return value;
+    }
+
+    @Override
+    public void close() {
+        if (tempFile != null) {
+            try {
+                Files.deleteIfExists(tempFile);
+            } catch (IOException e) {
+                log.warn("Failed to delete temp file: {}", tempFile, e);
+            }
+        }
     }
 }

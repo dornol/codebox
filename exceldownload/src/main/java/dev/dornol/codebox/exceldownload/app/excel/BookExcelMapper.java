@@ -13,7 +13,7 @@ public class BookExcelMapper {
     }
 
     public static ExcelHandler<BookDto> getHandler(Stream<BookDto> stream) {
-        var handler = new ExcelHandler<BookDto>();
+        var handler = new ExcelHandler<BookDto>(0xCC, 0xFF, 0x99);
         return handler
                 .column("no", (rowData, cursor) -> cursor.getCurrentTotal()).type(ExcelDataType.INTEGER)
                 .column("id", BookDto::id).type(ExcelDataType.LONG)

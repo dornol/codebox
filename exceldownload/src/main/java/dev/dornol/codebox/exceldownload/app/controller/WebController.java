@@ -18,18 +18,26 @@ public class WebController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/download-excel")
-    public ResponseEntity<StreamingResponseBody> downloadExcel(
+    @GetMapping("/download-excel-with-password")
+    public ResponseEntity<StreamingResponseBody> downloadExcelWithPassword(
             @RequestParam(required = false, defaultValue = "1234") String password) {
-        String filename = "book list ok";
+        String filename = "book list excel with password";
         var handler = bookService.getExcelHandler();
         return DownloadUtil.builder(filename, DownloadFileType.EXCEL)
                 .body(outputStream -> handler.consumeOutputStreamWithPassword(outputStream, password));
     }
 
+    @GetMapping("/download-excel")
+    public ResponseEntity<StreamingResponseBody> downloadExcel() {
+        String filename = "book list excel";
+        var handler = bookService.getExcelHandler();
+        return DownloadUtil.builder(filename, DownloadFileType.EXCEL)
+                .body(handler::consumeOutputStream);
+    }
+
     @GetMapping("/download-csv")
     public ResponseEntity<StreamingResponseBody> downloadCsv() {
-        String filename = "book list ok";
+        String filename = "book list csv";
         var handler = bookService.getCsvHandler();
         return DownloadUtil.builder(filename, DownloadFileType.CSV).body(handler::consumeOutputStream);
     }
