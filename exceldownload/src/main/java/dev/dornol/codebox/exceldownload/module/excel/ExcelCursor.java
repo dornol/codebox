@@ -8,7 +8,6 @@ import java.util.Map;
 public final class ExcelCursor {
 
     private int rowOfSheet;
-    private final int columnCount;
     private int currentTotal;
     private final Map<String, String> stringBox = new HashMap<>();
     private final Map<String, Long> longBox = new HashMap<>();
@@ -18,10 +17,9 @@ public final class ExcelCursor {
     private final Map<String, LocalDateTime> datetimeBox = new HashMap<>();
     private final Map<String, LocalDate> dateBox = new HashMap<>();
 
-    ExcelCursor(int columnCount) {
+    ExcelCursor() {
         this.rowOfSheet = 0;
         this.currentTotal = 0;
-        this.columnCount = columnCount;
     }
 
     void plusRow() {
@@ -38,10 +36,6 @@ public final class ExcelCursor {
 
     public int getRowOfSheet() {
         return rowOfSheet;
-    }
-
-    public int getColumnCount() {
-        return columnCount;
     }
 
     public int getCurrentTotal() {
@@ -80,7 +74,6 @@ public final class ExcelCursor {
     public String toString() {
         return "ExcelCursor{" +
                 "rowOfSheet=" + rowOfSheet +
-                ", columnCount=" + columnCount +
                 ", currentTotal=" + currentTotal +
                 '}';
     }

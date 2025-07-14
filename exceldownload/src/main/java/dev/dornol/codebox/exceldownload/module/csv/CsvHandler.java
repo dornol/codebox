@@ -3,103 +3,38 @@ package dev.dornol.codebox.exceldownload.module.csv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
-public class CsvHandler<T> implements AutoCloseable {
+public class CsvHandler {
     private static final Logger log = LoggerFactory.getLogger(CsvHandler.class);
-    private final List<CsvColumn<T>> columns = new ArrayList<>();
-    private Path tempFile;
+    private final Path tempFile;
+    private boolean consumed = false;
 
-    public CsvHandler<T> column(String name, CsvRowFunction<T, Object> function) {
-        var column = new CsvColumn<T>(name, function);
-        this.columns.add(column);
-        return this;
-    }
-
-    public CsvHandler<T> column(String name, Function<T, Object> function) {
-        return column(name, (r, c) -> function.apply(r));
-    }
-
-    public CsvHandler<T> constColumn(String name, Object value) {
-        return column(name, (r, c) -> value);
-    }
-
-    public CsvHandler<T> write(Stream<T> stream) {
-        try {
-            tempFile = Files.createTempFile(UUID.randomUUID().toString(), ".csv");
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-
-        try (OutputStream os = Files.newOutputStream(tempFile)) {
-            writeTempFile(stream, os);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-
-        return this;
-    }
-
-    void writeTempFile(Stream<T> stream, OutputStream outputStream) {
-        Stream<T> sequential = stream.sequential();
-        try (
-                sequential;
-                var writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))
-        ) {
-            CsvCursor cursor = new CsvCursor(columns.size());
-            cursor.initRow();
-
-            // 헤더 출력
-            writer.println(columns.stream()
-                    .map(CsvColumn::getName)
-                    .reduce((a, b) -> a + "," + b).orElse(""));
-            cursor.plusRow();
-
-            // 데이터 출력
-            sequential.forEach(row -> {
-                cursor.plusTotal();
-                cursor.plusRow();
-                String line = columns.stream()
-                        .map(col -> col.applyFunction(row, cursor))
-                        .map(CsvHandler::escapeCsv)
-                        .reduce((a, b) -> a + "," + b)
-                        .orElse("");
-                writer.println(line);
-            });
-        }
+    CsvHandler(Path tempFile) {
+        this.tempFile = tempFile;
     }
 
     public void consumeOutputStream(OutputStream outputStream) {
+        if (consumed) {
+            throw new IllegalStateException("Already consumed");
+        }
         try {
             try (InputStream is = Files.newInputStream(tempFile)) {
                 is.transferTo(outputStream);
-            } finally {
-                this.close();
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
+        } finally {
+            consumed = true;
+            this.close();
         }
     }
 
-    private static String escapeCsv(Object input) {
-        if (input == null) return "";
-        String value = input.toString();
-        if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
-            return "\"" + value.replace("\"", "\"\"") + "\"";
-        }
-        return value;
-    }
-
-    @Override
-    public void close() {
+    private void close() {
         if (tempFile != null) {
             try {
                 Files.deleteIfExists(tempFile);

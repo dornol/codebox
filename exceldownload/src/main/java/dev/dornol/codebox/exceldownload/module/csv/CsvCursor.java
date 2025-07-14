@@ -2,15 +2,10 @@ package dev.dornol.codebox.exceldownload.module.csv;
 
 public final class CsvCursor {
     private int rowOfSheet;
-    private final int columnCount;
     private int currentTotal;
 
-    public CsvCursor(int columnCount) {
-        this.columnCount = columnCount;
-    }
-
-    public int getColumnCount() {
-        return columnCount;
+    public CsvCursor() {
+        /* empty */
     }
 
     void plusRow() {
