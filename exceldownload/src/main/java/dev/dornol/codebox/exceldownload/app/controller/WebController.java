@@ -1,5 +1,7 @@
 package dev.dornol.codebox.exceldownload.app.controller;
 
+import dev.dornol.codebox.exceldownload.app.dto.TypeTestDto;
+import dev.dornol.codebox.exceldownload.app.excel.TypeTestExcelMapper;
 import dev.dornol.codebox.exceldownload.app.service.BookService;
 import dev.dornol.codebox.exceldownload.app.util.DownloadFileType;
 import dev.dornol.codebox.exceldownload.app.util.DownloadUtil;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import java.util.stream.Stream;
 
 @Controller
 public class WebController {
@@ -40,6 +44,14 @@ public class WebController {
         String filename = "book list csv";
         var handler = bookService.getCsvHandler();
         return DownloadUtil.builder(filename, DownloadFileType.CSV).body(handler::consumeOutputStream);
+    }
+
+    @GetMapping("/download-excel-types")
+    public ResponseEntity<StreamingResponseBody> downloadExcelTypes() {
+        String filename = "type test excel";
+        var handler = TypeTestExcelMapper.getHandler(Stream.generate(TypeTestDto::rand).limit(10000));
+        return DownloadUtil.builder(filename, DownloadFileType.EXCEL)
+                .body(handler::consumeOutputStream);
     }
 
     @ResponseBody

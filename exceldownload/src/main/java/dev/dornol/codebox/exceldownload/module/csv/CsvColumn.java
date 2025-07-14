@@ -3,13 +3,13 @@ package dev.dornol.codebox.exceldownload.module.csv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class CsvColumn<T> {
+final class CsvColumn<T> {
     private static final Logger log = LoggerFactory.getLogger(CsvColumn.class);
 
     private final String name;
     private final CsvRowFunction<T, Object> function;
 
-    public CsvColumn(String name, CsvRowFunction<T, Object> function) {
+    CsvColumn(String name, CsvRowFunction<T, Object> function) {
         if (name == null) {
             throw new IllegalArgumentException("name must not be null");
         }
@@ -29,7 +29,7 @@ public final class CsvColumn<T> {
         }
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 }
