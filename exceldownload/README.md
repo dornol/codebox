@@ -26,6 +26,6 @@
 ```shell
 cd ../excel-util
 ./gradlew publishToMavenLocal
-cd ../excelownload
+cd ../exceldownload
 ./gradlew build --refresh-dependencies
 ```
