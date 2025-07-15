@@ -14,6 +14,7 @@ java {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -21,6 +22,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.apache.poi:poi-ooxml:5.4.1")
+    implementation("dev.dornol.codebox.excelutil:excelutil:1.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")

@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.module.excel;
+package dev.dornol.codebox.excelutil.excel;
 
 import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;

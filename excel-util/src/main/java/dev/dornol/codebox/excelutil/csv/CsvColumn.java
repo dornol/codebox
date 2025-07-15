@@ -1,9 +1,9 @@
-package dev.dornol.codebox.exceldownload.module.csv;
+package dev.dornol.codebox.excelutil.csv;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class CsvColumn<T> {
+class CsvColumn<T> {
     private static final Logger log = LoggerFactory.getLogger(CsvColumn.class);
 
     private final String name;

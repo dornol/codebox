@@ -5,8 +5,11 @@ import dev.dornol.codebox.exceldownload.app.excel.TypeTestExcelMapper;
 import dev.dornol.codebox.exceldownload.app.service.BookService;
 import dev.dornol.codebox.exceldownload.app.util.DownloadFileType;
 import dev.dornol.codebox.exceldownload.app.util.DownloadUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +19,7 @@ import java.util.stream.Stream;
 
 @Controller
 public class WebController {
+    private static final Logger log = LoggerFactory.getLogger(WebController.class);
     private final BookService bookService;
 
     public WebController(BookService bookService) {
@@ -60,6 +64,11 @@ public class WebController {
         Runtime runtime = Runtime.getRuntime();
         long usedMemory = runtime.totalMemory() - runtime.freeMemory();
         return String.format("Memory used: %d MB", usedMemory / 1024 / 1024);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public void handleException(Exception e) {
+        log.error("??");
     }
 
 }
