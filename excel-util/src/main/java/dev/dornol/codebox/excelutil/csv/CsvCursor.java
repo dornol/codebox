@@ -1,11 +1,12 @@
-package dev.dornol.codebox.exceldownload.module.csv;
+package dev.dornol.codebox.excelutil.csv;
 
-public final class CsvCursor {
+public class CsvCursor {
     private int rowOfSheet;
     private int currentTotal;
 
     public CsvCursor() {
-        /* empty */
+        this.rowOfSheet = 0;
+        this.currentTotal = 0;
     }
 
     void plusRow() {

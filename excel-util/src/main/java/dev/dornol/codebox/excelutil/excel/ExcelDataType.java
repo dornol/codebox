@@ -1,10 +1,10 @@
-package dev.dornol.codebox.exceldownload.module.excel;
+package dev.dornol.codebox.excelutil.excel;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static dev.dornol.codebox.exceldownload.module.excel.ExcelDataFormat.*;
+import static dev.dornol.codebox.excelutil.excel.ExcelDataFormat.*;
 
 public enum ExcelDataType {
 

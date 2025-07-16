@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.module.excel;
+package dev.dornol.codebox.excelutil.excel;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.streaming.SXSSFCell;
@@ -75,9 +75,8 @@ public class ExcelWriter<T> {
         return new ExcelHandler(this.wb);
     }
 
-    public ExcelHandler write(Stream<T> stream) {
-        this.write(stream, (rowData, consumer) -> {});
-        return new ExcelHandler(this.wb);
+    ExcelHandler write(Stream<T> stream) {
+        return this.write(stream, (rowData, consumer) -> {});
     }
 
     private void setColumnHeaders() {

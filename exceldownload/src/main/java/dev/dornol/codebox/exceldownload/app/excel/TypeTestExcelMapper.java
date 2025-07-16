@@ -1,13 +1,15 @@
 package dev.dornol.codebox.exceldownload.app.excel;
 
 import dev.dornol.codebox.exceldownload.app.dto.TypeTestDto;
-import dev.dornol.codebox.exceldownload.module.excel.ExcelDataFormat;
-import dev.dornol.codebox.exceldownload.module.excel.ExcelDataType;
-import dev.dornol.codebox.exceldownload.module.excel.ExcelHandler;
-import dev.dornol.codebox.exceldownload.module.excel.ExcelWriter;
+import dev.dornol.codebox.excelutil.excel.ExcelDataFormat;
+import dev.dornol.codebox.excelutil.excel.ExcelDataType;
+import dev.dornol.codebox.excelutil.excel.ExcelHandler;
+import dev.dornol.codebox.excelutil.excel.ExcelWriter;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class TypeTestExcelMapper {
@@ -17,7 +19,9 @@ public class TypeTestExcelMapper {
 
     public static ExcelHandler getHandler(Stream<TypeTestDto> stream) {
         var date = LocalDate.now();
+        SecureRandom random = new SecureRandom();
         return new ExcelWriter<TypeTestDto>(1000)
+                .column("no", (rowData, cursor) -> cursor.getCurrentTotal()).type(ExcelDataType.INTEGER)
                 .column("string", TypeTestDto::aString)
                 .column("long", TypeTestDto::aLong).type(ExcelDataType.LONG)
                 .column("integer", TypeTestDto::anInteger).type(ExcelDataType.INTEGER)
@@ -32,6 +36,8 @@ public class TypeTestExcelMapper {
                 .column("bigdecimal_long", TypeTestDto::aLongBigDecimal).type(ExcelDataType.BIG_DECIMAL_TO_LONG)
                 .column("bigdecimal_double", TypeTestDto::aDoubleBigDecimal).type(ExcelDataType.BIG_DECIMAL_TO_DOUBLE)
                 .column("currency", TypeTestDto::aDoubleBigDecimal).type(ExcelDataType.BIG_DECIMAL_TO_DOUBLE).format(ExcelDataFormat.CURRENCY_KRW.getFormat())
+                .constColumn("const", random.nextLong()).type(ExcelDataType.LONG)
+                .constColumn("const_string", UUID.randomUUID().toString())
                 .write(stream);
     }
 }

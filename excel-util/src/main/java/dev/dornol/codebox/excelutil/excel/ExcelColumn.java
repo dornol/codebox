@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.module.excel;
+package dev.dornol.codebox.excelutil.excel;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-final class ExcelColumn<T> {
+class ExcelColumn<T> {
     private static final Logger log = LoggerFactory.getLogger(ExcelColumn.class);
     private static final int MAX_COLUMN_WIDTH = 255 * 256;
     private final String name;

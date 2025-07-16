@@ -1,4 +1,4 @@
-package dev.dornol.codebox.exceldownload.module.csv;
+package dev.dornol.codebox.excelutil.csv;
 
 import java.io.IOException;
 import java.io.OutputStream;

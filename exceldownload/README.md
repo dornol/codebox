@@ -22,3 +22,10 @@
 - BigDecimal (double and long conversions)
 
 ## Configuration
+
+```shell
+cd ../excel-util
+./gradlew publishToMavenLocal
+cd ../exceldownload
+./gradlew build --refresh-dependencies
+```
