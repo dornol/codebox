@@ -79,7 +79,7 @@ class ExcelColumn<T> {
     }
 
     public static class ExcelColumnBuilder<T> {
-        private final ExcelWriter<T> handler;
+        private final ExcelWriter<T> writer;
         private final String name;
         private final ExcelRowFunction<T, Object> function;
         private ExcelDataType dataType;
@@ -88,8 +88,8 @@ class ExcelColumn<T> {
         private CellStyle style;
         private ExcelColumnSetter columnSetter;
 
-        ExcelColumnBuilder(ExcelWriter<T> handler, String name, ExcelRowFunction<T, Object> function) {
-            this.handler = handler;
+        ExcelColumnBuilder(ExcelWriter<T> writer, String name, ExcelRowFunction<T, Object> function) {
+            this.writer = writer;
             this.name = name;
             this.function = function;
         }
@@ -122,7 +122,7 @@ class ExcelColumn<T> {
                 this.dataFormat = this.dataType.getDefaultFormat(); // format 먼저
             }
             if (this.style == null) {
-                this.style = ExcelStyleSupporter.cellStyle(handler.getWb(), this.alignment, this.dataFormat); // format 반영됨
+                this.style = ExcelStyleSupporter.cellStyle(writer.getWb(), this.alignment, this.dataFormat); // format 반영됨
             }
             if (this.columnSetter == null) {
                 this.columnSetter = this.dataType.getSetter();
@@ -131,28 +131,28 @@ class ExcelColumn<T> {
         }
 
         public ExcelColumnBuilder<T> column(String name, ExcelRowFunction<T, Object> function) {
-            this.handler.addColumn(this.build());
-            return new ExcelColumnBuilder<>(handler, name, function);
+            this.writer.addColumn(this.build());
+            return new ExcelColumnBuilder<>(writer, name, function);
         }
 
         public ExcelColumnBuilder<T> column(String name, Function<T, Object> function) {
-            this.handler.addColumn(this.build());
-            return new ExcelColumnBuilder<>(handler, name, (r, c) -> function.apply(r));
+            this.writer.addColumn(this.build());
+            return new ExcelColumnBuilder<>(writer, name, (r, c) -> function.apply(r));
         }
 
         public ExcelColumnBuilder<T> constColumn(String name, Object value) {
-            this.handler.addColumn(this.build());
-            return new ExcelColumnBuilder<>(handler, name, (r, c) -> value);
+            this.writer.addColumn(this.build());
+            return new ExcelColumnBuilder<>(writer, name, (r, c) -> value);
         }
 
         public ExcelHandler write(Stream<T> stream, ExcelConsumer<T> consumer) {
-            this.handler.addColumn(this.build());
-            return this.handler.write(stream, consumer);
+            this.writer.addColumn(this.build());
+            return this.writer.write(stream, consumer);
         }
 
         public ExcelHandler write(Stream<T> stream) {
-            this.handler.addColumn(this.build());
-            return this.handler.write(stream);
+            this.writer.addColumn(this.build());
+            return this.writer.write(stream);
         }
 
     }
