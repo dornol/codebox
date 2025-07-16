@@ -6,11 +6,6 @@ plugins {
 group = "dev.dornol.codebox.excelutil"
 version = "1.0"
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
 repositories {
     mavenCentral()
 }
@@ -39,13 +34,4 @@ publishing {
 
 tasks.test {
     useJUnitPlatform()
-}
-
-tasks.javadoc {
-    options.encoding = "UTF-8"
-    (options as? org.gradle.external.javadoc.StandardJavadocDocletOptions)?.apply {
-        encoding = "UTF-8"
-        charSet = "UTF-8"
-        docEncoding = "UTF-8"
-    }
 }
