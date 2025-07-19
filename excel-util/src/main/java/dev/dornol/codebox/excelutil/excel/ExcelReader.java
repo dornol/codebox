@@ -5,6 +5,7 @@ import jakarta.validation.Validator;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -32,7 +33,7 @@ public class ExcelReader<T> {
      * @param validator        Optional Bean Validation validator (nullable)
      */
     public ExcelReader(Supplier<T> instanceSupplier, Validator validator) {
-        this.instanceSupplier = instanceSupplier;
+        this.instanceSupplier = Objects.requireNonNull(instanceSupplier, "instanceSupplier cannot be null");
         this.validator = validator;
     }
 

@@ -191,7 +191,6 @@ public class ExcelReadHandler<T> extends TempFileContainer {
          */
         private boolean validateIfNeeded() {
             if (validator == null) {
-                log.warn("Validator is not set. Skipping validation.");
                 return true;
             }
 

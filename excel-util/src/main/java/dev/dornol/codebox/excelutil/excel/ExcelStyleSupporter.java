@@ -62,8 +62,13 @@ class ExcelStyleSupporter {
      * @return true if color is considered dark, false otherwise
      */
     private static boolean isDarkColor(XSSFColor color) {
+        if (color == null) {
+            return false;
+        }
         byte[] rgb = color.getRGB();
-        if (rgb == null || rgb.length != 3) return false;
+        if (rgb == null || rgb.length != 3) {
+            return false;
+        }
 
         int r = Byte.toUnsignedInt(rgb[0]);
         int g = Byte.toUnsignedInt(rgb[1]);

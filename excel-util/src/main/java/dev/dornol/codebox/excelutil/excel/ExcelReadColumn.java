@@ -37,12 +37,16 @@ record ExcelReadColumn<T>(BiConsumer<T, ExcelCellData> setter) {
 
         /**
          * Adds the current column and begins a new column definition.
+         + * <p>
+         + * Note: This method adds the current column to the reader and returns a new builder
+         + * instance for the next column. The current builder instance should not be reused.
+         + * </p>
          *
          * @param setter The setter function for the next column
          * @return A new column builder for chaining
          */
         public ExcelReadColumnBuilder<T> column(BiConsumer<T, ExcelCellData> setter) {
-            this.reader.addColumn(new ExcelReadColumn<>(this.setter));
+            buildCurrentAndAddToReader();
             return new ExcelReadColumnBuilder<>(reader, setter);
         }
 
@@ -53,10 +57,13 @@ record ExcelReadColumn<T>(BiConsumer<T, ExcelCellData> setter) {
          * @return Configured ExcelReadHandler
          */
         public ExcelReadHandler<T> build(InputStream inputStream) {
-            this.reader.addColumn(new ExcelReadColumn<>(this.setter));
+            buildCurrentAndAddToReader();
             return this.reader.build(inputStream);
         }
 
+        private void buildCurrentAndAddToReader() {
+            this.reader.addColumn(new ExcelReadColumn<>(this.setter));
+        }
     }
 
 }

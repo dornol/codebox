@@ -49,7 +49,7 @@ public class WebController {
     @GetMapping("/download-excel-types")
     public ResponseEntity<StreamingResponseBody> downloadExcelTypes() {
         String filename = "type test excel";
-        var handler = TypeTestExcelMapper.getHandler(Stream.generate(TypeTestDto::rand).limit(5000000));
+        var handler = TypeTestExcelMapper.getHandler(Stream.generate(TypeTestDto::rand).limit(10000));
         return DownloadUtil.builder(filename, DownloadFileType.EXCEL)
                 .body(handler::consumeOutputStream);
     }

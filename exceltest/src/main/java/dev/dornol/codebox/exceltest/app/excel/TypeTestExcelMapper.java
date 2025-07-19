@@ -35,7 +35,7 @@ public class TypeTestExcelMapper {
                 .column("boolean", TypeTestDto::aBoolean).type(ExcelDataType.BOOLEAN_TO_YN)
                 .column("bigdecimal_long", TypeTestDto::aLongBigDecimal).type(ExcelDataType.BIG_DECIMAL_TO_LONG)
                 .column("bigdecimal_double", TypeTestDto::aDoubleBigDecimal).type(ExcelDataType.BIG_DECIMAL_TO_DOUBLE)
-                .column("currency", TypeTestDto::aDoubleBigDecimal).type(ExcelDataType.BIG_DECIMAL_TO_DOUBLE).format(ExcelDataFormat.CURRENCY_KRW.getFormat())
+                .column("currency", TypeTestDto::aDoubleBigDecimal).type(ExcelDataType.BIG_DECIMAL_TO_DOUBLE).format(ExcelDataFormat.CURRENCY_USD.getFormat())
                 .constColumn("const", random.nextLong()).type(ExcelDataType.LONG)
                 .constColumn("const_string", UUID.randomUUID().toString())
                 .write(stream);
@@ -47,6 +47,17 @@ public class TypeTestExcelMapper {
                 .column((d, c) -> d.setaString(c.asString()))
                 .column((d, c) -> d.setaLong(c.asLong()))
                 .column((d, c) -> d.setAnInteger(c.asInt()))
+                .column((d, c) -> d.setaLocalDateTime(c.asLocalDateTime()))
+                .column((d, c) -> d.setaLocalDate(c.asLocalDate()))
+                .column((d, c) -> d.setaLocalTime(c.asLocalTime()))
+                .column((d, c) -> d.setaDouble(c.asDouble()))
+                .column((d, c) -> d.setaDouble(c.asDouble()))
+                .column((d, c) -> d.setaFloat(c.asFloat()))
+                .column((d, c) -> d.setaFloat(c.asFloat()))
+                .column((d, c) -> d.setaBoolean(c.asBoolean()))
+                .column((d, c) -> d.setaLongBigDecimal(c.asBigDecimal()))
+                .column((d, c) -> d.setaDoubleBigDecimal(c.asBigDecimal()))
+                .column((d, c) -> d.setaDoubleBigDecimal(c.asBigDecimal()))
                 .build(inputStream);
     }
 }
