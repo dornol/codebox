@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 public final class BookReadDto {
     @NotNull(message = "ID must not be null")
     private Long id;
@@ -35,7 +38,10 @@ public final class BookReadDto {
 
     @AssertTrue(message = "@@@@@ contains dhkim!! @@@@@")
     public boolean isCustomValidation() {
-        return !title.contains("dhkim") && !subtitle.contains("dhkim") && !author.contains("dhkim") && !publisher.contains("dhkim") && !isbn.contains("dhkim") && !description.contains("dhkim");
+        String restricted = "dhkim";
+        return Stream.of(title, subtitle, author, publisher, isbn, description)
+                .filter(Objects::nonNull)
+                .noneMatch(field -> field.contains(restricted));
     }
 
     public Long getId() {

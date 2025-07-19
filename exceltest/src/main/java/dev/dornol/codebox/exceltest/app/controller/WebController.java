@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
 import java.util.stream.Stream;
 
 @Controller
@@ -59,7 +61,20 @@ public class WebController {
     public String memory() {
         Runtime runtime = Runtime.getRuntime();
         long usedMemory = runtime.totalMemory() - runtime.freeMemory();
-        return String.format("Memory used: %d MB", usedMemory / 1024 / 1024);
+
+        // com.sun.management.OperatingSystemMXBean 사용
+        OperatingSystemMXBean osBean =
+                (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
+        double processCpuLoad = osBean.getProcessCpuLoad(); // 현재 JVM의 CPU 사용률 (0.0 ~ 1.0)
+        double systemCpuLoad = osBean.getCpuLoad();   // 전체 시스템의 CPU 사용률 (0.0 ~ 1.0)
+
+        return String.format(
+                "Memory used: %d MB%nJVM CPU load: %.2f %%%nSystem CPU load: %.2f %%",
+                usedMemory / 1024 / 1024,
+                processCpuLoad * 100,
+                systemCpuLoad * 100
+        );
     }
 
 }

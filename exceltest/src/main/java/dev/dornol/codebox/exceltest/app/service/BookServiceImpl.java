@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -59,9 +61,10 @@ public class BookServiceImpl implements BookService {
         final int[] counts = {0};
         final int[] successCounts = {0};
         final int[] errorCounts = {0};
+        List<Book> books = new ArrayList<>();
         handler.read(result -> {
             if (result.success()) {
-                bookRepository.save(new Book(
+                books.add(new Book(
                         null,
                         result.data().getTitle(),
                         result.data().getSubtitle(),
@@ -78,8 +81,10 @@ public class BookServiceImpl implements BookService {
             counts[0]++;
             if (counts[0] > 1000) {
                 log.info("read excel finished");
+                bookRepository.saveAll(books);
                 em.flush();
                 em.clear();
+                books.clear();
                 log.info("flush and clear finished");
                 counts[0] = 0;
             }

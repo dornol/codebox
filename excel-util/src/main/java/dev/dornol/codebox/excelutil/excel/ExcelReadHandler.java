@@ -42,7 +42,6 @@ public class ExcelReadHandler<T> extends TempFileContainer {
     private final List<ExcelReadColumn<T>> columns;
     private final Supplier<T> instanceSupplier;
     private final Validator validator;
-    private List<String> messages;
 
     /**
      * Constructs a handler for reading Excel files.
@@ -53,13 +52,24 @@ public class ExcelReadHandler<T> extends TempFileContainer {
      * @param validator        Optional bean validator for validating mapped instances
      */
     ExcelReadHandler(InputStream inputStream, List<ExcelReadColumn<T>> columns, Supplier<T> instanceSupplier, Validator validator) {
+        if (inputStream == null) {
+            throw new IllegalArgumentException("InputStream cannot be null");
+        }
+        if (columns == null || columns.isEmpty()) {
+            throw new IllegalArgumentException("Columns cannot be null or empty");
+        }
+        if (instanceSupplier == null) {
+            throw new IllegalArgumentException("Instance supplier cannot be null");
+        }
         this.columns = columns;
         this.instanceSupplier = instanceSupplier;
         this.validator = validator;
         try {
             setTempDir(Files.createTempDirectory(UUID.randomUUID().toString()));
             setTempFile(Files.createTempFile(getTempDir(), UUID.randomUUID().toString(), ".xlsx"));
-            Files.copy(inputStream, getTempFile(), StandardCopyOption.REPLACE_EXISTING);
+            try (InputStream is = inputStream) {
+                Files.copy(is, getTempFile(), StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -74,8 +84,9 @@ public class ExcelReadHandler<T> extends TempFileContainer {
      * @param consumer Callback to receive parsed and validated row results
      */
     public void read(Consumer<ExcelReadResult<T>> consumer) {
+        OPCPackage pkg = null;
         try {
-            OPCPackage pkg = OPCPackage.open(getTempFile().toFile());
+            pkg = OPCPackage.open(getTempFile().toFile());
             XSSFReader reader = new XSSFReader(pkg);
 
             SharedStrings ss = reader.getSharedStringsTable();
@@ -93,6 +104,13 @@ public class ExcelReadHandler<T> extends TempFileContainer {
         } catch (Exception e) {
             throw new IllegalStateException("Failed to read excel", e);
         } finally {
+            if (pkg != null) {
+                try {
+                    pkg.close();
+                } catch (IOException e) {
+                    log.warn("Failed to close package", e);
+                }
+            }
             close();
         }
     }
@@ -106,6 +124,7 @@ public class ExcelReadHandler<T> extends TempFileContainer {
         private final List<ExcelCellData> currentRow = new ArrayList<>();
         private final List<String> headerNames = new ArrayList<>();
         private final Consumer<ExcelReadResult<T>> consumer;
+        private List<String> messages;
 
         public SheetHandler(Consumer<ExcelReadResult<T>> consumer) {
             this.consumer = consumer;
