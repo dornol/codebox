@@ -34,7 +34,6 @@ import java.util.function.Supplier;
  * It is optimized for large files and avoids loading the entire workbook into memory.
  *
  * @param <T> The target row data type to map each row into
- *
  * @author dhkim
  * @since 2025-07-19
  */
@@ -43,6 +42,7 @@ public class ExcelReadHandler<T> extends TempFileContainer {
     private final List<ExcelReadColumn<T>> columns;
     private final Supplier<T> instanceSupplier;
     private final Validator validator;
+    private List<String> messages;
 
     /**
      * Constructs a handler for reading Excel files.
@@ -67,6 +67,9 @@ public class ExcelReadHandler<T> extends TempFileContainer {
 
     /**
      * Starts parsing the Excel file and invokes the given consumer for each row result.
+     * <p>
+     * Each row is converted into a target object via the configured column setters.
+     * Validation (if enabled) is performed after mapping.
      *
      * @param consumer Callback to receive parsed and validated row results
      */
@@ -109,56 +112,32 @@ public class ExcelReadHandler<T> extends TempFileContainer {
         }
 
         /**
-         * Called at the start of each row.
+         * Called at the start of each row. Resets the instance and message buffer.
          */
         @Override
         public void startRow(int rowNum) {
             currentInstance = instanceSupplier.get();
             currentRow.clear();
+            messages = null;
         }
 
         /**
          * Called at the end of each row.
-         * Performs column mapping and validation, and passes result to consumer.
+         * <p>
+         * - Row 0 is treated as the header.
+         * - Later rows are mapped to the target object, validated (if applicable), and passed to consumer.
          */
         @Override
         public void endRow(int rowNum) {
             if (rowNum == 0) {
-                headerNames.addAll(currentRow.stream().map(ExcelCellData::formattedValue).toList());
+                extractHeaderNames();
                 return;
             }
 
-            boolean success = true;
-            List<String> messages = null;
+            boolean mappingSuccess = mapValuesToInstance();
+            boolean validationSuccess = mappingSuccess && validateIfNeeded();
 
-            for (int i = 0; i < columns.size(); i++) {
-                if (i >= currentRow.size()) continue;
-                try {
-                    columns.get(i).setter().accept(currentInstance, currentRow.get(i));
-                } catch (Exception e) {
-                    if (messages == null) {
-                        messages = new ArrayList<>();
-                    }
-                    success = false;
-                    String header = (i < headerNames.size()) ? headerNames.get(i) : "column#" + i;
-                    messages.add("Failed to set column: " + header);
-                    log.warn("Column mapping failed", e);
-                }
-            }
-
-            if (success) {
-                if (validator != null) {
-                    Set<ConstraintViolation<T>> violations = validator.validate(currentInstance);
-                    if (!violations.isEmpty()) {
-                        messages = new ArrayList<>();
-                        success = false;
-                        violations.stream().map(ConstraintViolation::getMessage).forEach(messages::add);
-                    }
-                } else {
-                    log.warn("Validator is not set. Skipping validation.");
-                }
-            }
-            consumer.accept(new ExcelReadResult<>(currentInstance, success, messages));
+            consumer.accept(new ExcelReadResult<>(currentInstance, validationSuccess, messages));
         }
 
         /**
@@ -167,6 +146,66 @@ public class ExcelReadHandler<T> extends TempFileContainer {
         @Override
         public void cell(String cellReference, String formattedValue, XSSFComment comment) {
             currentRow.add(new ExcelCellData(currentRow.size(), formattedValue));
+        }
+
+        /**
+         * Extracts header names from the first row.
+         */
+        private void extractHeaderNames() {
+            headerNames.addAll(currentRow.stream()
+                    .map(ExcelCellData::formattedValue)
+                    .toList());
+        }
+
+        /**
+         * Applies all column setters to the current row data.
+         *
+         * @return true if all setters succeeded, false if any failed
+         */
+        private boolean mapValuesToInstance() {
+            boolean success = true;
+
+            for (int i = 0; i < columns.size(); i++) {
+                if (i >= currentRow.size()) continue;
+
+                try {
+                    columns.get(i).setter().accept(currentInstance, currentRow.get(i));
+                } catch (Exception e) {
+                    success = false;
+                    if (messages == null) {
+                        messages = new ArrayList<>();
+                    }
+                    String header = (i < headerNames.size()) ? headerNames.get(i) : "column#" + i;
+                    messages.add("Failed to set column: " + header);
+                    log.warn("Column mapping failed", e);
+                }
+            }
+
+            return success;
+        }
+
+        /**
+         * Validates the current instance using Bean Validation (if enabled).
+         *
+         * @return true if valid, false if any constraint violations occurred
+         */
+        private boolean validateIfNeeded() {
+            if (validator == null) {
+                log.warn("Validator is not set. Skipping validation.");
+                return true;
+            }
+
+            Set<ConstraintViolation<T>> violations = validator.validate(currentInstance);
+            if (violations.isEmpty()) return true;
+
+            if (messages == null) {
+                messages = new ArrayList<>();
+            }
+            violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .forEach(messages::add);
+
+            return false;
         }
 
     }
