@@ -1,7 +1,6 @@
 package dev.dornol.codebox.excelutil.csv;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import dev.dornol.codebox.excelutil.TempFileContainer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,13 +8,12 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class CsvHandler {
-    private static final Logger log = LoggerFactory.getLogger(CsvHandler.class);
-    private final Path tempFile;
+public class CsvHandler extends TempFileContainer {
     private boolean consumed = false;
 
-    CsvHandler(Path tempFile) {
-        this.tempFile = tempFile;
+    CsvHandler(Path tempDir, Path tempFile) {
+        setTempFile(tempFile);
+        setTempDir(tempDir);
     }
 
     public void consumeOutputStream(OutputStream outputStream) {
@@ -23,24 +21,14 @@ public class CsvHandler {
             throw new IllegalStateException("Already consumed");
         }
         try {
-            try (InputStream is = Files.newInputStream(tempFile)) {
+            try (InputStream is = Files.newInputStream(getTempFile())) {
                 is.transferTo(outputStream);
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
         } finally {
             consumed = true;
-            this.close();
-        }
-    }
-
-    private void close() {
-        if (tempFile != null) {
-            try {
-                Files.deleteIfExists(tempFile);
-            } catch (IOException e) {
-                log.warn("Failed to delete temp file: {}", tempFile, e);
-            }
+            super.close();
         }
     }
 }

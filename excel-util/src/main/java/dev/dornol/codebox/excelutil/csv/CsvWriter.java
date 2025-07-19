@@ -32,9 +32,11 @@ public class CsvWriter<T> {
     }
 
     public CsvHandler write(Stream<T> stream) {
+        Path tempDir;
         Path tempFile;
         try {
-            tempFile = Files.createTempFile(UUID.randomUUID().toString(), ".csv");
+            tempDir = Files.createTempDirectory(UUID.randomUUID().toString());
+            tempFile = Files.createTempFile(tempDir, UUID.randomUUID().toString(), ".csv");
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -45,7 +47,7 @@ public class CsvWriter<T> {
             throw new IllegalStateException(e);
         }
 
-        return new CsvHandler(tempFile);
+        return new CsvHandler(tempDir, tempFile);
     }
 
     private void writeTempFile(Stream<T> stream, OutputStream outputStream) {

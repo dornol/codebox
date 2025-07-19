@@ -1,29 +1,27 @@
 package dev.dornol.codebox.excelutil.excel;
 
-import org.apache.poi.ss.usermodel.Cell;
-
 import java.io.InputStream;
 import java.util.function.BiConsumer;
 
-record ExcelReadColumn<T>(BiConsumer<T, Cell> setter) {
+record ExcelReadColumn<T>(BiConsumer<T, ExcelCellData> setter) {
 
     public static class ExcelReadColumnBuilder<T> {
         private final ExcelReader<T> reader;
-        private final BiConsumer<T, Cell> setter;
+        private final BiConsumer<T, ExcelCellData> setter;
 
-        ExcelReadColumnBuilder(ExcelReader<T> reader, BiConsumer<T, Cell> setter) {
+        ExcelReadColumnBuilder(ExcelReader<T> reader, BiConsumer<T, ExcelCellData> setter) {
             this.reader = reader;
             this.setter = setter;
         }
 
-        public ExcelReadColumnBuilder<T> column(BiConsumer<T, Cell> setter) {
+        public ExcelReadColumnBuilder<T> column(BiConsumer<T, ExcelCellData> setter) {
             this.reader.addColumn(new ExcelReadColumn<>(this.setter));
             return new ExcelReadColumnBuilder<>(reader, setter);
         }
 
-        public ExcelReadHandler<T> read(InputStream inputStream) {
+        public ExcelReadHandler<T> reader(InputStream inputStream) {
             this.reader.addColumn(new ExcelReadColumn<>(this.setter));
-            return this.reader.read(inputStream);
+            return this.reader.build(inputStream);
         }
 
     }
