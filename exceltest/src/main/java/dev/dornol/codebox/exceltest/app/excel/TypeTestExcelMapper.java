@@ -20,7 +20,7 @@ public class TypeTestExcelMapper {
     public static ExcelHandler getHandler(Stream<TypeTestDto> stream) {
         var date = LocalDate.now();
         SecureRandom random = new SecureRandom();
-        return new ExcelWriter<TypeTestDto>(1000000)
+        return new ExcelWriter<TypeTestDto>(147, 252, 42, 1000000)
                 .column("no", (rowData, cursor) -> cursor.getCurrentTotal()).type(ExcelDataType.INTEGER)
                 .column("string", TypeTestDto::aString)
                 .column("long", TypeTestDto::aLong).type(ExcelDataType.LONG)
@@ -47,6 +47,6 @@ public class TypeTestExcelMapper {
                 .column((d, c) -> d.setaString(c.asString()))
                 .column((d, c) -> d.setaLong(c.asLong()))
                 .column((d, c) -> d.setAnInteger(c.asInt()))
-                .reader(inputStream);
+                .build(inputStream);
     }
 }

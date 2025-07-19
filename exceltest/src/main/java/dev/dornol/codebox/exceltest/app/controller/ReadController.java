@@ -21,10 +21,21 @@ public class ReadController {
     @PostMapping("/read")
     public String readExcel(MultipartFile file) throws IOException {
         try (InputStream inputStream = file.getInputStream()) {
-            ZipSecureFile.setMaxFileCount(10000000); // 적절히 넉넉하게 조정
+            ZipSecureFile.setMaxFileCount(10000000);
             IOUtils.setByteArrayMaxOverride(2_000_000_000);
 
             bookService.readExcel(inputStream);
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/read-and-save")
+    public String readAndSaveExcel(MultipartFile file) throws IOException {
+        try (InputStream inputStream = file.getInputStream()) {
+            ZipSecureFile.setMaxFileCount(10000000);
+            IOUtils.setByteArrayMaxOverride(2_000_000_000);
+
+            bookService.readAndSaveExcel(inputStream);
         }
         return "redirect:/";
     }

@@ -13,4 +13,6 @@ public interface BookService {
 
     void readExcel(InputStream inputStream);
 
+    void readAndSaveExcel(InputStream inputStream);
+
 }

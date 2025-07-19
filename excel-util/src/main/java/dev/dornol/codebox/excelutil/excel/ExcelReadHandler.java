@@ -27,13 +27,31 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Reads Excel (.xlsx) files using Apache POI's event-based streaming API.
+ * <p>
+ * This handler parses sheet data row by row, maps values to Java objects, and performs optional validation.
+ * It is optimized for large files and avoids loading the entire workbook into memory.
+ *
+ * @param <T> The target row data type to map each row into
+ *
+ * @author dhkim
+ * @since 2025-07-19
+ */
 public class ExcelReadHandler<T> extends TempFileContainer {
     private static final Logger log = LoggerFactory.getLogger(ExcelReadHandler.class);
     private final List<ExcelReadColumn<T>> columns;
     private final Supplier<T> instanceSupplier;
     private final Validator validator;
 
-
+    /**
+     * Constructs a handler for reading Excel files.
+     *
+     * @param inputStream      The input stream of the uploaded Excel file
+     * @param columns          The list of column setters to apply per row
+     * @param instanceSupplier A supplier to instantiate new row objects
+     * @param validator        Optional bean validator for validating mapped instances
+     */
     ExcelReadHandler(InputStream inputStream, List<ExcelReadColumn<T>> columns, Supplier<T> instanceSupplier, Validator validator) {
         this.columns = columns;
         this.instanceSupplier = instanceSupplier;
@@ -47,6 +65,11 @@ public class ExcelReadHandler<T> extends TempFileContainer {
         }
     }
 
+    /**
+     * Starts parsing the Excel file and invokes the given consumer for each row result.
+     *
+     * @param consumer Callback to receive parsed and validated row results
+     */
     public void read(Consumer<ExcelReadResult<T>> consumer) {
         try {
             OPCPackage pkg = OPCPackage.open(getTempFile().toFile());
@@ -71,6 +94,10 @@ public class ExcelReadHandler<T> extends TempFileContainer {
         }
     }
 
+
+    /**
+     * Internal handler for row-by-row Excel parsing.
+     */
     private class SheetHandler extends DefaultHandler implements XSSFSheetXMLHandler.SheetContentsHandler {
         private T currentInstance;
         private final List<ExcelCellData> currentRow = new ArrayList<>();
@@ -81,12 +108,19 @@ public class ExcelReadHandler<T> extends TempFileContainer {
             this.consumer = consumer;
         }
 
+        /**
+         * Called at the start of each row.
+         */
         @Override
         public void startRow(int rowNum) {
             currentInstance = instanceSupplier.get();
             currentRow.clear();
         }
 
+        /**
+         * Called at the end of each row.
+         * Performs column mapping and validation, and passes result to consumer.
+         */
         @Override
         public void endRow(int rowNum) {
             if (rowNum == 0) {
@@ -127,6 +161,9 @@ public class ExcelReadHandler<T> extends TempFileContainer {
             consumer.accept(new ExcelReadResult<>(currentInstance, success, messages));
         }
 
+        /**
+         * Called for each cell in the current row.
+         */
         @Override
         public void cell(String cellReference, String formattedValue, XSSFComment comment) {
             currentRow.add(new ExcelCellData(currentRow.size(), formattedValue));

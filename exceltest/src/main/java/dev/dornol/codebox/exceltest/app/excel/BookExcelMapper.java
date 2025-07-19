@@ -1,10 +1,11 @@
 package dev.dornol.codebox.exceltest.app.excel;
 
 import dev.dornol.codebox.exceltest.app.dto.BookDto;
-import dev.dornol.codebox.excelutil.excel.ExcelDataType;
-import dev.dornol.codebox.excelutil.excel.ExcelHandler;
-import dev.dornol.codebox.excelutil.excel.ExcelWriter;
+import dev.dornol.codebox.exceltest.app.dto.BookReadDto;
+import dev.dornol.codebox.excelutil.excel.*;
+import jakarta.validation.Validator;
 
+import java.io.InputStream;
 import java.util.stream.Stream;
 
 public class BookExcelMapper {
@@ -24,6 +25,19 @@ public class BookExcelMapper {
                 .column("isbn", BookDto::isbn)
                 .column("description", BookDto::description)
                 .write(stream);
+    }
+
+    public static ExcelReadHandler<BookReadDto> getReadHandler(InputStream inputStream, Validator validator) {
+        return new ExcelReader<>(BookReadDto::new, validator)
+                .column((r, d) -> {})
+                .column((r, d) -> r.setId(d.asLong()))
+                .column((r, d) -> r.setTitle(d.asString()))
+                .column((r, d) -> r.setSubtitle(d.asString()))
+                .column((r, d) -> r.setAuthor(d.asString()))
+                .column((r, d) -> r.setPublisher(d.asString()))
+                .column((r, d) -> r.setIsbn(d.asString()))
+                .column((r, d) -> r.setDescription(d.asString()))
+                .build(inputStream);
     }
 
 }
