@@ -7,17 +7,17 @@ import java.time.LocalTime;
 
 public class TypeTestReadDto {
     private Long no;
-    private String aString;
-    private Long aLong;
-    private Integer anInteger;
-    private LocalDateTime aLocalDateTime;
-    private LocalDate aLocalDate;
-    private LocalTime aLocalTime;
-    private Double aDouble;
-    private Float aFloat;
-    private Boolean aBoolean;
-    private BigDecimal aLongBigDecimal;
-    private BigDecimal aDoubleBigDecimal;
+    private String stringVal;
+    private Long longVal;
+    private Integer integer;
+    private LocalDateTime localDateTime;
+    private LocalDate localDate;
+    private LocalTime localTime;
+    private Double doubleVal;
+    private Float floatVal;
+    private Boolean booleanVal;
+    private BigDecimal longBigDecimal;
+    private BigDecimal doubleBigDecimal;
 
     public Long getNo() {
         return no;
@@ -27,109 +27,109 @@ public class TypeTestReadDto {
         this.no = no;
     }
 
-    public String getaString() {
-        return aString;
+    public String getStringVal() {
+        return stringVal;
     }
 
-    public Long getaLong() {
-        return aLong;
+    public void setStringVal(String stringVal) {
+        this.stringVal = stringVal;
     }
 
-    public Integer getAnInteger() {
-        return anInteger;
+    public Long getLongVal() {
+        return longVal;
     }
 
-    public LocalDateTime getaLocalDateTime() {
-        return aLocalDateTime;
+    public void setLongVal(Long longVal) {
+        this.longVal = longVal;
     }
 
-    public LocalDate getaLocalDate() {
-        return aLocalDate;
+    public Integer getInteger() {
+        return integer;
     }
 
-    public LocalTime getaLocalTime() {
-        return aLocalTime;
+    public void setInteger(Integer integer) {
+        this.integer = integer;
     }
 
-    public Double getaDouble() {
-        return aDouble;
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
     }
 
-    public Float getaFloat() {
-        return aFloat;
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 
-    public Boolean getaBoolean() {
-        return aBoolean;
+    public LocalDate getLocalDate() {
+        return localDate;
     }
 
-    public BigDecimal getaLongBigDecimal() {
-        return aLongBigDecimal;
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
     }
 
-    public BigDecimal getaDoubleBigDecimal() {
-        return aDoubleBigDecimal;
+    public LocalTime getLocalTime() {
+        return localTime;
     }
 
-    public void setaString(String aString) {
-        this.aString = aString;
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
     }
 
-    public void setaLong(Long aLong) {
-        this.aLong = aLong;
+    public Double getDoubleVal() {
+        return doubleVal;
     }
 
-    public void setAnInteger(Integer anInteger) {
-        this.anInteger = anInteger;
+    public void setDoubleVal(Double doubleVal) {
+        this.doubleVal = doubleVal;
     }
 
-    public void setaLocalDateTime(LocalDateTime aLocalDateTime) {
-        this.aLocalDateTime = aLocalDateTime;
+    public Float getFloatVal() {
+        return floatVal;
     }
 
-    public void setaLocalDate(LocalDate aLocalDate) {
-        this.aLocalDate = aLocalDate;
+    public void setFloatVal(Float floatVal) {
+        this.floatVal = floatVal;
     }
 
-    public void setaLocalTime(LocalTime aLocalTime) {
-        this.aLocalTime = aLocalTime;
+    public Boolean getBooleanVal() {
+        return booleanVal;
     }
 
-    public void setaDouble(Double aDouble) {
-        this.aDouble = aDouble;
+    public void setBooleanVal(Boolean booleanVal) {
+        this.booleanVal = booleanVal;
     }
 
-    public void setaFloat(Float aFloat) {
-        this.aFloat = aFloat;
+    public BigDecimal getLongBigDecimal() {
+        return longBigDecimal;
     }
 
-    public void setaBoolean(Boolean aBoolean) {
-        this.aBoolean = aBoolean;
+    public void setLongBigDecimal(BigDecimal longBigDecimal) {
+        this.longBigDecimal = longBigDecimal;
     }
 
-    public void setaLongBigDecimal(BigDecimal aLongBigDecimal) {
-        this.aLongBigDecimal = aLongBigDecimal;
+    public BigDecimal getDoubleBigDecimal() {
+        return doubleBigDecimal;
     }
 
-    public void setaDoubleBigDecimal(BigDecimal aDoubleBigDecimal) {
-        this.aDoubleBigDecimal = aDoubleBigDecimal;
+    public void setDoubleBigDecimal(BigDecimal doubleBigDecimal) {
+        this.doubleBigDecimal = doubleBigDecimal;
     }
 
     @Override
     public String toString() {
         return "TypeTestReadDto{" +
                 "no=" + no +
-                ", aString='" + aString + '\'' +
-                ", aLong=" + aLong +
-                ", anInteger=" + anInteger +
-                ", aLocalDateTime=" + aLocalDateTime +
-                ", aLocalDate=" + aLocalDate +
-                ", aLocalTime=" + aLocalTime +
-                ", aDouble=" + aDouble +
-                ", aFloat=" + aFloat +
-                ", aBoolean=" + aBoolean +
-                ", aLongBigDecimal=" + aLongBigDecimal +
-                ", aDoubleBigDecimal=" + aDoubleBigDecimal +
+                ", aString='" + stringVal + '\'' +
+                ", aLong=" + longVal +
+                ", anInteger=" + integer +
+                ", aLocalDateTime=" + localDateTime +
+                ", aLocalDate=" + localDate +
+                ", aLocalTime=" + localTime +
+                ", aDouble=" + doubleVal +
+                ", aFloat=" + floatVal +
+                ", aBoolean=" + booleanVal +
+                ", aLongBigDecimal=" + longBigDecimal +
+                ", aDoubleBigDecimal=" + doubleBigDecimal +
                 '}';
     }
 }

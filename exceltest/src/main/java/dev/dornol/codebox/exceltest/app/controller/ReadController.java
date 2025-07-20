@@ -1,8 +1,6 @@
 package dev.dornol.codebox.exceltest.app.controller;
 
 import dev.dornol.codebox.exceltest.app.service.BookService;
-import org.apache.poi.openxml4j.util.ZipSecureFile;
-import org.apache.poi.util.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,9 +19,6 @@ public class ReadController {
     @PostMapping("/read")
     public String readExcel(MultipartFile file) throws IOException {
         try (InputStream inputStream = file.getInputStream()) {
-            ZipSecureFile.setMaxFileCount(10000000);
-            IOUtils.setByteArrayMaxOverride(2_000_000_000);
-
             bookService.readExcel(inputStream);
         }
         return "redirect:/";
@@ -32,9 +27,6 @@ public class ReadController {
     @PostMapping("/read-and-save")
     public String readAndSaveExcel(MultipartFile file) throws IOException {
         try (InputStream inputStream = file.getInputStream()) {
-            ZipSecureFile.setMaxFileCount(10000000);
-            IOUtils.setByteArrayMaxOverride(2_000_000_000);
-
             bookService.readAndSaveExcel(inputStream);
         }
         return "redirect:/";

@@ -33,6 +33,15 @@ import java.util.function.Supplier;
  * This handler parses sheet data row by row, maps values to Java objects, and performs optional validation.
  * It is optimized for large files and avoids loading the entire workbook into memory.
  *
+ * <p>
+ * For large or complex Excel files, the following POI internal limits are adjusted:
+ * <ul>
+ *     <li>{@code ZipSecureFile.setMaxFileCount(10_000_000)} — Increases the maximum number of internal file entries to avoid security exceptions for large files.</li>
+ *     <li>{@code IOUtils.setByteArrayMaxOverride(2_000_000_000)} — Increases the maximum allowable in-memory byte array size to support large embedded binary data.</li>
+ * </ul>
+ * Be cautious when adjusting these values, as it may affect application memory usage and security.
+ * </p>
+ *
  * @param <T> The target row data type to map each row into
  * @author dhkim
  * @since 2025-07-19
