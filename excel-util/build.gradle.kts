@@ -1,10 +1,6 @@
 plugins {
     id("java")
-    id("maven-publish")
 }
-
-group = "dev.dornol.codebox.excelutil"
-version = "1.0"
 
 repositories {
     mavenCentral()
@@ -15,21 +11,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.apache.poi:poi-ooxml:5.4.1")
     implementation("ch.qos.logback:logback-classic:1.5.18")
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            groupId = "dev.dornol.codebox.excelutil"
-            artifactId = "excelutil"
-            version = "1.0"
-        }
-    }
-
-    repositories {
-        mavenLocal()
-    }
+    implementation("org.hibernate.validator:hibernate-validator:9.0.1.Final")
 }
 
 tasks.test {

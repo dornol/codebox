@@ -5,11 +5,31 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 
+/**
+ * ExcelStyleSupporter
+ * <p>
+ * A utility class that provides reusable cell styles for header and body cells
+ * in SXSSFWorkbook-based Excel exports.
+ * </p>
+ * This class supports dynamic font color adjustment for dark headers and border styling.
+ *
+ * @author dhkim
+ * @since 2025-07-19
+ */
 class ExcelStyleSupporter {
+    // Private constructor to prevent instantiation
     private ExcelStyleSupporter() {
         /* empty */
     }
 
+    /**
+     * Creates a bold, centered header cell style with a specified background color.
+     * Automatically sets the font color to white if the background is dark.
+     *
+     * @param wb           SXSSFWorkbook instance
+     * @param headerColor  Background color of the header (XSSFColor)
+     * @return Configured CellStyle for headers
+     */
     static CellStyle headerStyle(SXSSFWorkbook wb, XSSFColor headerColor) {
         CellStyle headerStyle = wb.createCellStyle();
         Font headerFont = wb.createFont();
@@ -34,9 +54,21 @@ class ExcelStyleSupporter {
         return headerStyle;
     }
 
+    /**
+     * Determines whether the given XSSFColor is visually dark using luminance.
+     * Uses W3C's brightness formula: Y = 0.299R + 0.587G + 0.114B
+     *
+     * @param color XSSFColor to evaluate
+     * @return true if color is considered dark, false otherwise
+     */
     private static boolean isDarkColor(XSSFColor color) {
+        if (color == null) {
+            return false;
+        }
         byte[] rgb = color.getRGB();
-        if (rgb == null || rgb.length != 3) return false;
+        if (rgb == null || rgb.length != 3) {
+            return false;
+        }
 
         int r = Byte.toUnsignedInt(rgb[0]);
         int g = Byte.toUnsignedInt(rgb[1]);
@@ -47,6 +79,15 @@ class ExcelStyleSupporter {
         return luminance < 128; // 밝기 기준: 0~255 중 128 미만은 어둡다고 판단
     }
 
+    /**
+     * Creates a generic cell style with the given alignment and data format.
+     * All borders are thin, and text wrapping is enabled.
+     *
+     * @param wb        SXSSFWorkbook instance
+     * @param alignment Cell horizontal alignment (e.g., CENTER, LEFT)
+     * @param format    Data format string (e.g., "yyyy-mm-dd", "#,##0")
+     * @return Configured CellStyle for body cells
+     */
     static CellStyle cellStyle(SXSSFWorkbook wb, HorizontalAlignment alignment, String format) {
         CellStyle nowStyle = wb.createCellStyle();
 
