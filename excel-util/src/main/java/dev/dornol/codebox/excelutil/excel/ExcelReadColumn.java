@@ -3,13 +3,13 @@ package dev.dornol.codebox.excelutil.excel;
 import java.io.InputStream;
 import java.util.function.BiConsumer;
 
+
 /**
  * Represents a single Excel column binding for reading.
  * <p>
  * Holds a setter function that maps a {@link ExcelCellData} into a field of a row object.
  *
  * @param <T> The row data type
- *
  * @author dhkim
  * @since 2025-07-19
  */
@@ -25,10 +25,10 @@ record ExcelReadColumn<T>(BiConsumer<T, ExcelCellData> setter) {
         private final BiConsumer<T, ExcelCellData> setter;
 
         /**
-         * Constructs a column builder.
+         * Constructs a new column builder.
          *
-         * @param reader The parent ExcelReader
-         * @param setter The setter function for this column
+         * @param reader The parent {@link ExcelReader}
+         * @param setter The setter function to bind a column value to a field
          */
         ExcelReadColumnBuilder(ExcelReader<T> reader, BiConsumer<T, ExcelCellData> setter) {
             this.reader = reader;
@@ -36,14 +36,14 @@ record ExcelReadColumn<T>(BiConsumer<T, ExcelCellData> setter) {
         }
 
         /**
-         * Adds the current column and begins a new column definition.
-         + * <p>
-         + * Note: This method adds the current column to the reader and returns a new builder
-         + * instance for the next column. The current builder instance should not be reused.
-         + * </p>
+         * Adds the current column binding to the reader and begins a new column definition.
+         * <p>
+         * Note: This method adds the current column to the reader and returns a new builder
+         * instance for the next column. The current builder instance should not be reused.
+         * </p>
          *
          * @param setter The setter function for the next column
-         * @return A new column builder for chaining
+         * @return A new builder instance for chaining the next column
          */
         public ExcelReadColumnBuilder<T> column(BiConsumer<T, ExcelCellData> setter) {
             buildCurrentAndAddToReader();
@@ -51,16 +51,19 @@ record ExcelReadColumn<T>(BiConsumer<T, ExcelCellData> setter) {
         }
 
         /**
-         * Finalizes column definitions and builds an {@link ExcelReadHandler} to start reading.
+         * Finalizes the column definitions and builds an {@link ExcelReadHandler} for reading.
          *
-         * @param inputStream The input stream of the Excel file
-         * @return Configured ExcelReadHandler
+         * @param inputStream The input stream of the Excel (.xlsx) file
+         * @return A configured {@code ExcelReadHandler} instance
          */
         public ExcelReadHandler<T> build(InputStream inputStream) {
             buildCurrentAndAddToReader();
             return this.reader.build(inputStream);
         }
 
+        /**
+         * Internal method to add the current column definition to the reader.
+         */
         private void buildCurrentAndAddToReader() {
             this.reader.addColumn(new ExcelReadColumn<>(this.setter));
         }

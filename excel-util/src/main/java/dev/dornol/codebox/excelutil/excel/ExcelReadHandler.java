@@ -93,9 +93,7 @@ public class ExcelReadHandler<T> extends TempFileContainer {
      * @param consumer Callback to receive parsed and validated row results
      */
     public void read(Consumer<ExcelReadResult<T>> consumer) {
-        OPCPackage pkg = null;
-        try {
-            pkg = OPCPackage.open(getTempFile().toFile());
+        try (OPCPackage pkg = OPCPackage.open(getTempFile().toFile())) {
             XSSFReader reader = new XSSFReader(pkg);
 
             SharedStrings ss = reader.getSharedStringsTable();
@@ -113,13 +111,6 @@ public class ExcelReadHandler<T> extends TempFileContainer {
         } catch (Exception e) {
             throw new IllegalStateException("Failed to read excel", e);
         } finally {
-            if (pkg != null) {
-                try {
-                    pkg.close();
-                } catch (IOException e) {
-                    log.warn("Failed to close package", e);
-                }
-            }
             close();
         }
     }
