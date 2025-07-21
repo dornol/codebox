@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static dev.dornol.codebox.excelutil.excel.ExcelDataFormat.*;
-
 
 /**
  * Enum representing supported Excel cell data types.
@@ -33,32 +31,32 @@ public enum ExcelDataType {
     /**
      * Long integer value.
      */
-    LONG((cell, value) -> cell.setCellValue((Long) value), NUMBER.getFormat()),
+    LONG((cell, value) -> cell.setCellValue((Long) value), ExcelDataFormat.NUMBER.getFormat()),
 
     /**
      * Integer value.
      */
-    INTEGER((cell, value) -> cell.setCellValue((Integer) value), NUMBER.getFormat()),
+    INTEGER((cell, value) -> cell.setCellValue((Integer) value), ExcelDataFormat.NUMBER.getFormat()),
 
     /**
      * Double value with 2 decimal places.
      */
-    DOUBLE((cell, value) -> cell.setCellValue((Double) value), NUMBER_2.getFormat()),
+    DOUBLE((cell, value) -> cell.setCellValue((Double) value), ExcelDataFormat.NUMBER_2.getFormat()),
 
     /**
      * Float value with 2 decimal places.
      */
-    FLOAT((cell, value) -> cell.setCellValue((Float) value), NUMBER_2.getFormat()),
+    FLOAT((cell, value) -> cell.setCellValue((Float) value), ExcelDataFormat.NUMBER_2.getFormat()),
 
     /**
      * Double value interpreted as a percentage (e.g. 0.25 → 25%).
      */
-    DOUBLE_PERCENT((cell, value) -> cell.setCellValue((Double) value), PERCENT.getFormat()),
+    DOUBLE_PERCENT((cell, value) -> cell.setCellValue((Double) value), ExcelDataFormat.PERCENT.getFormat()),
 
     /**
      * Float value interpreted as a percentage.
      */
-    FLOAT_PERCENT((cell, value) -> cell.setCellValue((Float) value), PERCENT.getFormat()),
+    FLOAT_PERCENT((cell, value) -> cell.setCellValue((Float) value), ExcelDataFormat.PERCENT.getFormat()),
 
     /**
      * LocalDateTime formatted as "yyyy-MM-dd HH:mm:ss".
@@ -78,7 +76,7 @@ public enum ExcelDataType {
     /**
      * BigDecimal converted to double (2 decimal places).
      */
-    BIG_DECIMAL_TO_DOUBLE((cell, value) -> cell.setCellValue(((BigDecimal) value).doubleValue()), NUMBER_2.getFormat()),
+    BIG_DECIMAL_TO_DOUBLE((cell, value) -> cell.setCellValue(((BigDecimal) value).doubleValue()), ExcelDataFormat.NUMBER_2.getFormat()),
 
     /**
      * BigDecimal converted to long (no decimal).

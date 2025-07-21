@@ -40,12 +40,17 @@ public record ExcelCellData(int columnIndex, String formattedValue) {
     /**
      * Parses the value as a {@link Number} using the given locale.
      * This method removes formatting characters such as commas, currency symbols, and percent signs.
+     * Returns {@code null} if the value is empty or blank.
      *
      * @param locale the locale to use for number formatting (e.g. {@code Locale.KOREA})
-     * @return parsed number
+     * @return parsed number, or {@code null} if empty or blank
      * @throws IllegalArgumentException if parsing fails
      */
     public Number asNumber(Locale locale) {
+        if (formattedValue == null || formattedValue.isBlank()) {
+            return null;
+        }
+
         try {
             // 공백, NBSP 제거 + 특수 문자 제거
             String cleaned = formattedValue
@@ -63,6 +68,7 @@ public record ExcelCellData(int columnIndex, String formattedValue) {
 
     /**
      * Parses the value as a {@link Number} using {@link Locale#KOREA} as default.
+     * Returns {@code null} if the value is empty or blank.
      */
     public Number asNumber() {
         return asNumber(Locale.KOREA);
@@ -70,21 +76,27 @@ public record ExcelCellData(int columnIndex, String formattedValue) {
 
     /**
      * Converts the value to {@link Long}.
+     * Returns {@code null} if the value is empty or blank.
      */
     public Long asLong() {
-        return asNumber().longValue();
+        Number number = asNumber();
+        return number != null ? number.longValue() : null;
     }
 
     /**
      * Converts the value to {@link Integer}.
+     * Returns {@code null} if the value is empty or blank.
      * Throws if the long value is out of int range.
      */
     public Integer asInt() {
-        long longValue = asLong();
+        Long longValue = asLong();
+        if (longValue == null) {
+            return null;
+        }
         if (longValue > Integer.MAX_VALUE || longValue < Integer.MIN_VALUE) {
             throw new IllegalArgumentException("Value out of range: " + longValue);
         }
-        return (int) longValue;
+        return longValue.intValue();
     }
 
     /**
@@ -95,83 +107,117 @@ public record ExcelCellData(int columnIndex, String formattedValue) {
     }
 
     /**
-     * Converts the value to {@link Boolean}.
+     * Converts the value to {@link boolean}.
      * Accepts "true", "1", "y", "yes" (case-insensitive) as {@code true}.
+     * Returns {@code false} if the value is empty or blank, or does not match any recognized true value.
      */
-    public Boolean asBoolean() {
+    public boolean asBoolean() {
+        if (formattedValue == null || formattedValue.isBlank()) {
+            return false;
+        }
         String val = formattedValue.trim().toLowerCase();
         return val.equals("true") || val.equals("1") || val.equals("y") || val.equals("yes");
     }
 
     /**
      * Converts the value to {@link LocalDateTime} using default format "yyyy-MM-dd[ HH:mm[:ss]]".
+     * Returns {@code null} if the value is empty or blank.
      * This is useful for common Excel datetime formats.
      */
     public LocalDateTime asLocalDateTime() {
+        if (formattedValue == null || formattedValue.isBlank()) {
+            return null;
+        }
         return asLocalDateTime("yyyy-MM-dd[ HH:mm[:ss]]");
     }
 
     /**
      * Converts the value to {@link LocalDateTime} using the specified format.
+     * Returns {@code null} if the value is empty or blank.
      *
      * @param format the date-time pattern (e.g., "yyyy-MM-dd HH:mm:ss")
      */
     public LocalDateTime asLocalDateTime(String format) {
+        if (formattedValue == null || formattedValue.isBlank()) {
+            return null;
+        }
         return LocalDateTime.parse(formattedValue, DateTimeFormatter.ofPattern(format));
     }
 
     /**
      * Converts the value to {@link LocalDate} using ISO format (yyyy-MM-dd).
+     * Returns {@code null} if the value is empty or blank.
      */
     public LocalDate asLocalDate() {
+        if (formattedValue == null || formattedValue.isBlank()) {
+            return null;
+        }
         return LocalDate.parse(formattedValue);
     }
 
     /**
      * Converts the value to {@link LocalDate} using the specified format.
+     * Returns {@code null} if the value is empty or blank.
      *
      * @param format the date pattern (e.g., "yyyy/MM/dd")
      */
     public LocalDate asLocalDate(String format) {
+        if (formattedValue == null || formattedValue.isBlank()) {
+            return null;
+        }
         return LocalDate.parse(formattedValue, DateTimeFormatter.ofPattern(format));
     }
 
     /**
      * Converts the value to {@link LocalTime} using ISO format (HH:mm:ss).
+     * Returns {@code null} if the value is empty or blank.
      */
     public LocalTime asLocalTime() {
+        if (formattedValue == null || formattedValue.isBlank()) {
+            return null;
+        }
         return LocalTime.parse(formattedValue);
     }
 
     /**
      * Converts the value to {@link LocalTime} using the specified format.
+     * Returns {@code null} if the value is empty or blank.
      *
      * @param format the time pattern (e.g., "HH:mm")
      */
     public LocalTime asLocalTime(String format) {
+        if (formattedValue == null || formattedValue.isBlank()) {
+            return null;
+        }
         return LocalTime.parse(formattedValue, DateTimeFormatter.ofPattern(format));
     }
 
     /**
      * Converts the value to {@link Double}.
+     * Returns {@code null} if the value is empty or blank.
      */
     public Double asDouble() {
-        return asNumber().doubleValue();
+        Number number = asNumber();
+        return number != null ? number.doubleValue() : null;
     }
 
     /**
      * Converts the value to {@link Float}.
+     * Returns {@code null} if the value is empty or blank.
      */
     public Float asFloat() {
-        return asNumber().floatValue();
+        Number number = asNumber();
+        return number != null ? number.floatValue() : null;
     }
 
     /**
      * Converts the value to {@link BigDecimal}.
      * Uses the string representation of the parsed number to avoid precision loss.
+     * Returns {@code null} if the value is empty or blank.
      */
     public BigDecimal asBigDecimal() {
-        return new BigDecimal(asNumber().toString());
+        Number number = asNumber();
+        return number != null ? new BigDecimal(number.toString()) : null;
     }
 
 }

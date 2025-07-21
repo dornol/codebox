@@ -164,7 +164,11 @@ public class ExcelReadHandler<T> extends TempFileContainer {
          */
         @Override
         public void cell(String cellReference, String formattedValue, XSSFComment comment) {
-            currentRow.add(new ExcelCellData(currentRow.size(), formattedValue));
+            int colIndex = getColumnIndex(cellReference);
+            while (currentRow.size() < colIndex) {
+                currentRow.add(new ExcelCellData(currentRow.size(), null));
+            }
+            currentRow.add(new ExcelCellData(colIndex, formattedValue));
         }
 
         /**
@@ -224,6 +228,35 @@ public class ExcelReadHandler<T> extends TempFileContainer {
                     .forEach(messages::add);
 
             return false;
+        }
+
+        /**
+         * Converts an Excel cell reference (e.g., "C5", "AA12") to a zero-based column index.
+         * <p>
+         * Only the alphabetic part (column letters) is used. For example:
+         * <ul>
+         *   <li>"A1"  -> 0</li>
+         *   <li>"B3"  -> 1</li>
+         *   <li>"C5"  -> 2</li>
+         *   <li>"AA10"-> 26</li>
+         * </ul>
+         *
+         * @param cellReference The Excel cell reference (e.g., "C5", "AA10")
+         * @return The zero-based column index
+         */
+        private int getColumnIndex(String cellReference) {
+            // 예: "C5" => 2 (0-based)
+            StringBuilder sb = new StringBuilder();
+            for (char c : cellReference.toCharArray()) {
+                if (Character.isLetter(c)) sb.append(c);
+                else break;
+            }
+            String col = sb.toString();
+            int colIdx = 0;
+            for (char c : col.toCharArray()) {
+                colIdx = colIdx * 26 + (c - 'A' + 1);
+            }
+            return colIdx - 1;
         }
 
     }
