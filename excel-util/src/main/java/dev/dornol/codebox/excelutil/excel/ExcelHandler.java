@@ -68,6 +68,9 @@ public class ExcelHandler {
         if (consumed) {
             throw new IllegalStateException("Already consumed");
         }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("Password cannot be null or blank");
+        }
         try (POIFSFileSystem fs = new POIFSFileSystem()) {
             EncryptionInfo info = new EncryptionInfo(EncryptionMode.agile);
             Encryptor enc = info.getEncryptor();

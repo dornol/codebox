@@ -1,6 +1,7 @@
 package dev.dornol.codebox.excelutil.excel;
 
-import dev.dornol.codebox.excelutil.TempFileContainer;
+import dev.dornol.codebox.excelutil.TempResourceCreator;
+import dev.dornol.codebox.excelutil.TempResourceContainer;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -46,7 +47,7 @@ import java.util.function.Supplier;
  * @author dhkim
  * @since 2025-07-19
  */
-public class ExcelReadHandler<T> extends TempFileContainer {
+public class ExcelReadHandler<T> extends TempResourceContainer {
     private static final Logger log = LoggerFactory.getLogger(ExcelReadHandler.class);
     private final List<ExcelReadColumn<T>> columns;
     private final Supplier<T> instanceSupplier;
@@ -74,8 +75,8 @@ public class ExcelReadHandler<T> extends TempFileContainer {
         this.instanceSupplier = instanceSupplier;
         this.validator = validator;
         try {
-            setTempDir(Files.createTempDirectory(UUID.randomUUID().toString()));
-            setTempFile(Files.createTempFile(getTempDir(), UUID.randomUUID().toString(), ".xlsx"));
+            setTempDir(TempResourceCreator.createTempDirectory());
+            setTempFile(TempResourceCreator.createTempFile(getTempDir(), UUID.randomUUID().toString(), ".xlsx"));
             try (InputStream is = inputStream) {
                 Files.copy(is, getTempFile(), StandardCopyOption.REPLACE_EXISTING);
             }
