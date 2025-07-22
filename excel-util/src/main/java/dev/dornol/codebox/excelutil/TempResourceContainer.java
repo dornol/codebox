@@ -16,8 +16,8 @@ import java.nio.file.Path;
  * @author dhkim
  * @since 2025-07-19
  */
-public class TempFileContainer implements AutoCloseable {
-    private static final Logger log = LoggerFactory.getLogger(TempFileContainer.class);
+public class TempResourceContainer implements AutoCloseable {
+    private static final Logger log = LoggerFactory.getLogger(TempResourceContainer.class);
     private Path tempDir;
     private Path tempFile;
 

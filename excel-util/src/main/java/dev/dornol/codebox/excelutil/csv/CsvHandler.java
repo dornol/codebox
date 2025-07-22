@@ -1,6 +1,6 @@
 package dev.dornol.codebox.excelutil.csv;
 
-import dev.dornol.codebox.excelutil.TempFileContainer;
+import dev.dornol.codebox.excelutil.TempResourceContainer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +17,7 @@ import java.nio.file.Path;
  * @author dhkim
  * @since 2025-07-19
  */
-public class CsvHandler extends TempFileContainer {
+public class CsvHandler extends TempResourceContainer {
     private boolean consumed = false;
 
     /**

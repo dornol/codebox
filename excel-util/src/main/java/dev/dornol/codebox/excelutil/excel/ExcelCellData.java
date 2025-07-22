@@ -107,9 +107,12 @@ public record ExcelCellData(int columnIndex, String formattedValue) {
     }
 
     /**
-     * Converts the value to {@link boolean}.
+     * Converts the value to a boolean.
+     * <p>
      * Accepts "true", "1", "y", "yes" (case-insensitive) as {@code true}.
-     * Returns {@code false} if the value is empty or blank, or does not match any recognized true value.
+     * Returns {@code false} if the value is empty, blank, or does not match any recognized true value.
+     *
+     * @return {@code true} if the value represents a true-like string, otherwise {@code false}
      */
     public boolean asBoolean() {
         if (formattedValue == null || formattedValue.isBlank()) {

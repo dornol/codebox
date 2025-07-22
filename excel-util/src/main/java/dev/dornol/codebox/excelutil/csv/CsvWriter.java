@@ -1,5 +1,7 @@
 package dev.dornol.codebox.excelutil.csv;
 
+import dev.dornol.codebox.excelutil.TempResourceCreator;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -73,12 +75,8 @@ public class CsvWriter<T> {
     public CsvHandler write(Stream<T> stream) {
         Path tempDir;
         Path tempFile;
-        try {
-            tempDir = Files.createTempDirectory(UUID.randomUUID().toString());
-            tempFile = Files.createTempFile(tempDir, UUID.randomUUID().toString(), ".csv");
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        tempDir = TempResourceCreator.createTempDirectory();
+        tempFile = TempResourceCreator.createTempFile(tempDir, UUID.randomUUID().toString(), ".csv");
 
         try (OutputStream os = Files.newOutputStream(tempFile)) {
             writeTempFile(stream, os);
