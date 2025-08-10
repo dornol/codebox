@@ -18,7 +18,10 @@ pipeline {
                     withCredentials([
                             string(credentialsId: 'sonarqube.dornol.codebox', variable: 'SONAR_PROJECT_KEY')
                     ]) {
-                        sh "${GRADLE_CMD} ${SONAR_TASK} -Dsonar.projectKey=${SONAR_PROJECT_KEY}"
+                        sh """
+                            chmod +x ./gradlew
+                            ${GRADLE_CMD} ${SONAR_TASK} -Dsonar.projectKey=${SONAR_PROJECT_KEY}
+                        """
                     }
                 }
             }
