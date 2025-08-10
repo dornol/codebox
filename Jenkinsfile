@@ -1,11 +1,6 @@
 pipeline {
     agent { label 'default' }
 
-    environment {
-        GRADLE_CMD = './gradlew'
-        SONAR_TASK = 'sonar'
-    }
-
     stages {
         stage('SCM Checkout') {
             steps {
@@ -21,7 +16,7 @@ pipeline {
                     ]) {
                         sh """
                             chmod +x ./gradlew
-                            ${GRADLE_CMD} ${SONAR_TASK} -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.token=${SONAR_TOKEN}
+                            ./gradlew build sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.token=${SONAR_TOKEN}
                         """
                     }
                 }
