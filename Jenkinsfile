@@ -2,7 +2,6 @@ pipeline {
     agent { label 'default' }
 
     environment {
-        MODULE_DIR = 'jpa-typed-id'
         GRADLE_CMD = './gradlew'
         SONAR_TASK = 'sonar'
     }
@@ -19,9 +18,7 @@ pipeline {
                     withCredentials([
                             string(credentialsId: 'sonarqube.dornol.codebox', variable: 'SONAR_PROJECT_KEY')
                     ]) {
-                        dir(env.MODULE_DIR) {
-                            sh "${GRADLE_CMD} ${SONAR_TASK} -Dsonar.projectKey=${SONAR_PROJECT_KEY}"
-                        }
+                        sh "${GRADLE_CMD} ${SONAR_TASK} -Dsonar.projectKey=${SONAR_PROJECT_KEY}"
                     }
                 }
             }
