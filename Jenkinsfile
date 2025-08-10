@@ -16,11 +16,12 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     withCredentials([
-                            string(credentialsId: 'sonarqube.dornol.codebox', variable: 'SONAR_PROJECT_KEY')
+                            string(credentialsId: 'sonarqube.dornol.codebox', variable: 'SONAR_PROJECT_KEY'),
+                            string(credentialsId: 'sonarqube.dornol.token.codebox', variable: 'SONAR_TOKEN')
                     ]) {
                         sh """
                             chmod +x ./gradlew
-                            ${GRADLE_CMD} ${SONAR_TASK} -Dsonar.projectKey=${SONAR_PROJECT_KEY}
+                            ${GRADLE_CMD} ${SONAR_TASK} -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.token=${SONAR_TOKEN}
                         """
                     }
                 }

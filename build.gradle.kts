@@ -11,5 +11,6 @@ allprojects {
 sonar {
     properties {
         property("sonar.projectName", "codebox")
+        property("sonar.host.url", "https://sonarqube.dornol.dev")
     }
 }
